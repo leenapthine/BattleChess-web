@@ -1,0 +1,21 @@
+# === Backend (Django) ===
+__pycache__/
+*.py[cod]
+*.sqlite3
+*.log
+env/
+venv/
+
+# === Frontend (Vite + Solid + Vinxi) ===
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/.env
+
+# === System & Editor files ===
+.DS_Store
+.vscode/
+
+# === General env files ===
+.env
+npm-debug.log*
