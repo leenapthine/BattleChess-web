@@ -1,9 +1,11 @@
 import createSquare from '~/components/Square';
-import { selectedSquare, setSelectedSquare } from '~/state/gameState';
+import { selectedSquare, setSelectedSquare, pieces } from '~/state/gameState';
+import { Assets, Sprite } from 'pixi.js';
 
 const TILE_SIZE = 80;
+const loadedSprites = {};
 
-export function drawBoard(app) {
+export async function drawBoard(app) {
   app.stage.removeChildren();
   app.stage.sortableChildren = true;
 
@@ -33,8 +35,28 @@ export function drawBoard(app) {
 
       // Bump selected (highlighted) square to the top
       square.zIndex = isSelected ? 1 : 0;
-        
       app.stage.addChild(square);
     }
+  }
+
+  // Draw Pieces
+  for (const piece of pieces()) {
+    const textureId = `/sprites/${piece.color}${piece.type}.png`;
+
+    if (!loadedSprites[textureId]) {
+      const texture = await Assets.load(textureId);
+      texture.source.scaleMode = 'nearest';
+      texture.source.style.update();
+      loadedSprites[textureId] = texture;
+    }
+
+    const sprite = new Sprite(loadedSprites[textureId]);    
+    const scale = TILE_SIZE / sprite.texture.width;
+    sprite.scale.set(scale);
+
+    sprite.x = piece.col * TILE_SIZE;
+    sprite.y = piece.row * TILE_SIZE;
+    sprite.zIndex = 2;
+    app.stage.addChild(sprite);
   }
 }

@@ -9,7 +9,7 @@ export default function Board() {
     const app = new Application();
     await app.init({ width: 800, height: 800, backgroundColor: 0xffffff });
     containerRef.appendChild(app.canvas);
-    drawBoard(app);
+    await drawBoard(app);
   });
 
   return <div ref={containerRef} />;
