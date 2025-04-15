@@ -1,6 +1,8 @@
 import { createSignal } from 'solid-js';
 
 export const [selectedSquare, setSelectedSquare] = createSignal(null);
+export const [highlights, setHighlights] = createSignal([]);
+
 
 // Define a piece
 export const [pieces, setPieces] = createSignal([
@@ -23,7 +25,7 @@ export const [pieces, setPieces] = createSignal([
       type: "Pawn",
       color: "White",
       row: 1,
-      col: 0,
+      col: 1,
     },
     {
       id: 4,
