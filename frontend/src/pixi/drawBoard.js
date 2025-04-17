@@ -2,8 +2,9 @@ import createSquare from '~/components/Square';
 import { pieces, highlights } from '~/state/gameState';
 import { Assets, Sprite } from 'pixi.js';
 import { isSquareSelected } from '~/pixi/utils';
+import { TILE_SIZE } from '~/pixi/constants';
+import { resurrectionTargets } from '~/state/gameState';
 
-const TILE_SIZE = 80;
 const loadedTextures = {};
 
 /**
@@ -37,15 +38,20 @@ export async function drawBoard(pixiApplication, onSquareClick) {
 
       const squareIsSelected = isSquareSelected(rowIndex, columnIndex);
       const highlightData = getHighlightData(rowIndex, columnIndex);
-      const squareIsHighlighted = !!highlightData;
-      const borderColor = highlightData?.color ?? 0xffff00;
+      const squareIsResurrectionTarget = resurrectionTargets().some(
+        pos => pos.row === rowIndex && pos.col === columnIndex
+      );
+      const squareIsHighlighted = squareIsSelected || highlightData || squareIsResurrectionTarget;
+      const borderColor = squareIsResurrectionTarget
+        ? 0x00CCFF // green for resurrection targets
+        : highlightData?.color ?? 0xffff00; // normal highlight or default yellow
 
       const squareGraphic = createSquare({
         x: columnIndex * TILE_SIZE,
         y: rowIndex * TILE_SIZE,
         size: TILE_SIZE,
         color: squareColor,
-        highlighted: squareIsSelected || squareIsHighlighted,
+        highlighted: squareIsHighlighted,
         highlightColor: borderColor,
         onClick: () => onSquareClick(rowIndex, columnIndex, pixiApplication)
       });

@@ -2,6 +2,9 @@ import { createSignal } from 'solid-js';
 
 export const [selectedSquare, setSelectedSquare] = createSignal(null);
 export const [highlights, setHighlights] = createSignal([]);
+export const [resurrectionTargets, setResurrectionTargets] = createSignal([]);
+export const [pendingResurrectionColor, setPendingResurrectionColor] = createSignal(null);
+
 
 // Corrected standard chess layout
 export const [pieces, setPieces] = createSignal([
@@ -26,10 +29,10 @@ export const [pieces, setPieces] = createSignal([
   // Black Pieces (bottom of the board)
   { id: 17, type: "Rook", color: "Black", row: 7, col: 0 },
   { id: 18, type: "Knight", color: "Black", row: 7, col: 1 },
-  { id: 19, type: "Bishop", color: "Black", row: 7, col: 2 },
+  { id: 19, type: "Necromancer", color: "Black", row: 7, col: 2 },
   { id: 20, type: "Queen", color: "Black", row: 7, col: 3 },
   { id: 21, type: "King", color: "Black", row: 7, col: 4 },
-  { id: 22, type: "Bishop", color: "Black", row: 7, col: 5 },
+  { id: 22, type: "Necromancer", color: "Black", row: 7, col: 5 },
   { id: 23, type: "Knight", color: "Black", row: 7, col: 6 },
   { id: 24, type: "Rook", color: "Black", row: 7, col: 7 },
   { id: 25, type: "Pawn", color: "Black", row: 6, col: 0 },
