@@ -1,7 +1,7 @@
 import { onMount } from 'solid-js';
 import { Application } from 'pixi.js';
 import { drawBoard } from '~/pixi/drawBoard';
-import { handleSquareClick } from '~/pixi/interactions/clickHandler';
+import { handleSquareClick } from '~/pixi/clickHandler';
 
 /**
  * Top-level component that initializes and renders the PixiJS chessboard.
