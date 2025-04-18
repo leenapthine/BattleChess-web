@@ -8,12 +8,17 @@ import {
   resurrectionTargets,
   setResurrectionTargets,
   pendingResurrectionColor,
-  setPendingResurrectionColor
+  setPendingResurrectionColor,
+  sacrificeMode,
+  setSacrificeMode,
+  sacrificeArmed,
+  setSacrificeArmed,
 } from '~/state/gameState';
 import { highlightValidMovesForPiece } from '~/pixi/highlight';
 import { isSquareSelected, getPieceAt } from '~/pixi/utils';
 import { drawBoard } from '~/pixi/drawBoard';
 import { highlightRaiseDeadTiles } from '~/pixi/pieces/necro/Necromancer';
+import { performNecroPawnSacrifice } from '~/pixi/pieces/necro/NecroPawn';
 
 /**
  * Handles user interaction when a board square is clicked.
@@ -32,19 +37,42 @@ import { highlightRaiseDeadTiles } from '~/pixi/pieces/necro/Necromancer';
  * @param {Application} pixiApplication - The PixiJS application instance managing the canvas.
  */
 export async function handleSquareClick(rowIndex, columnIndex, pixiApplication) {
+  const all = pieces(); // prevent signal from changing during handler
   const clickedPiece = pieces().find(piece =>
-    piece.row === rowIndex && piece.col === columnIndex
+    piece.row === rowIndex && piece.col === columnIndex 
   );
 
   const isTargetHighlighted = highlights().some(highlight =>
-    highlight.row === rowIndex && highlight.col === columnIndex
+    highlight.row === rowIndex &&
+    highlight.col === columnIndex &&
+    !(selectedSquare()?.row === rowIndex && selectedSquare()?.col === columnIndex) // exclude self
   );
 
   const isResurrectionTarget = resurrectionTargets().some(pos =>
     pos.row === rowIndex && pos.col === columnIndex
   );
 
-  // Case 1: Clicked on a resurrection target square -> Place new Pawn
+  // Case 0: If sacrifice is armed AND clicked again → detonate
+  const isClickingToDetonate =
+    sacrificeMode()?.row === rowIndex &&
+    sacrificeMode()?.col === columnIndex &&
+    sacrificeArmed();
+
+  console.log("isClickingToDetonate =", isClickingToDetonate)
+
+  if (isClickingToDetonate) {
+    const necroPawn = sacrificeMode(); // save reference before state resets
+    performNecroPawnSacrifice(necroPawn, setPieces, all);
+
+    // now clear state AFTER explosion happens
+    setSacrificeMode(null);
+    setSacrificeArmed(false);
+    setSelectedSquare(null);
+    await drawBoard(pixiApplication, handleSquareClick);
+    return;
+  }
+
+  // Case 1: Resurrection target clicked → Place Pawn
   if (isResurrectionTarget && pendingResurrectionColor()) {
     const resurrectedPawn = {
       id: Date.now(),
@@ -61,69 +89,94 @@ export async function handleSquareClick(rowIndex, columnIndex, pixiApplication) 
     return;
   }
 
-  // Case 2: Clicked a valid move target -> Move selected piece
+  // Case 2: Move piece to highlighted square
   if (isTargetHighlighted && selectedSquare()) {
     const destination = { row: rowIndex, col: columnIndex };
-    const previouslySelected = selectedSquare();
-    const movingPiece = pieces().find(piece =>
-      piece.row === previouslySelected.row && piece.col === previouslySelected.col
-    );
+    const from = selectedSquare();
+    const movingPiece = pieces().find(p => p.row === from.row && p.col === from.col);
     const capturedPiece = getPieceAt(destination, pieces());
+    console.log("Captured:", capturedPiece);
 
-    const updatedPieceList = pieces()
-      .filter(piece => !(piece.row === rowIndex && piece.col === columnIndex)) // remove captured
-      .map(piece => {
-        if (piece.row === previouslySelected.row && piece.col === previouslySelected.col) {
-          return { ...piece, row: rowIndex, col: columnIndex }; // move piece
+    const updated = pieces()
+      .filter(p => !(p.row === destination.row && p.col === destination.col))
+      .map(p => {
+        if (p.row === from.row && p.col === from.col) {
+          return { ...p, row: destination.row, col: destination.col };
         }
-        return piece;
+        return p;
       });
 
-    setPieces(updatedPieceList);
+    setPieces(updated);
     setSelectedSquare(null);
     setHighlights([]);
+    setSacrificeMode(null);
 
-    // Necromancer: If capture occurred, trigger resurrection mode
-    if (movingPiece?.type === 'Necromancer' &&
+    if (
+      movingPiece?.type === 'Necromancer' &&
       capturedPiece &&
-      capturedPiece.color !== movingPiece.color) {
-    highlightRaiseDeadTiles(destination, updatedPieceList, movingPiece.color);
-  }
-
+      capturedPiece.color !== movingPiece.color
+    ) {
+      highlightRaiseDeadTiles(destination, updated, movingPiece.color);
+    }
     await drawBoard(pixiApplication, handleSquareClick);
     return;
   }
 
-  // Case 3: Clicked on a piece to select -> Show movement options
+  // Case 3a: Select a new piece
   if (clickedPiece && !isSquareSelected(rowIndex, columnIndex)) {
     setSelectedSquare({ row: rowIndex, col: columnIndex });
-
-    const newHighlightList = [];
+    const highlightList = [];
     highlightValidMovesForPiece(
       clickedPiece,
-      (targetRow, targetCol, highlightColor) => {
-        newHighlightList.push({
-          row: targetRow,
-          col: targetCol,
-          color: highlightColor
-        });
-      },
+      (r, c, color) => highlightList.push({ row: r, col: c, color }),
       pieces()
     );
 
-    setHighlights(newHighlightList);
+    setHighlights(highlightList);
     setResurrectionTargets([]);
     setPendingResurrectionColor(null);
+    setSacrificeMode(null);
+    setSacrificeArmed(false);
     await drawBoard(pixiApplication, handleSquareClick);
     return;
   }
 
-  // Case 4: Clicked on empty or already selected square -> Clear selection
+  // Case 3b: Click same NecroPawn → step deeper into sacrifice state
+  if (
+    selectedSquare() &&
+    selectedSquare().row === rowIndex &&
+    selectedSquare().col === columnIndex
+  ) {
+    const selectedPiece = getPieceAt(selectedSquare(), pieces());
+
+    if (selectedPiece?.type === 'NecroPawn') {
+      if (!sacrificeMode()) {
+        // Step 1: Enter sacrifice mode (next click detonates)
+        setSacrificeMode({ ...selectedPiece });
+        setSacrificeArmed(true);
+      } else {
+        // Step 2: Already armed, detonation handled earlier
+        return;
+      }
+      // Re-run highlight logic to re-trigger highlightMoves()
+      const highlightList = [];
+      highlightValidMovesForPiece(
+        selectedPiece,
+        (r, c, color) => highlightList.push({ row: r, col: c, color }),
+        pieces()
+      );
+      setHighlights(highlightList);
+      await drawBoard(pixiApplication, handleSquareClick);
+      return;
+    }
+  }
+
+  // Case 4: Clear selection
   setSelectedSquare(null);
   setHighlights([]);
   setResurrectionTargets([]);
   setPendingResurrectionColor(null);
+  setSacrificeMode(null);
+  setSacrificeArmed(false);
   await drawBoard(pixiApplication, handleSquareClick);
 }
-
-  

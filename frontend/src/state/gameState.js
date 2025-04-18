@@ -4,6 +4,8 @@ export const [selectedSquare, setSelectedSquare] = createSignal(null);
 export const [highlights, setHighlights] = createSignal([]);
 export const [resurrectionTargets, setResurrectionTargets] = createSignal([]);
 export const [pendingResurrectionColor, setPendingResurrectionColor] = createSignal(null);
+export const [sacrificeMode, setSacrificeMode] = createSignal(null);
+export const [sacrificeArmed, setSacrificeArmed] = createSignal(false);
 
 
 // Corrected standard chess layout
@@ -35,12 +37,12 @@ export const [pieces, setPieces] = createSignal([
   { id: 22, type: "Necromancer", color: "Black", row: 7, col: 5 },
   { id: 23, type: "Knight", color: "Black", row: 7, col: 6 },
   { id: 24, type: "Rook", color: "Black", row: 7, col: 7 },
-  { id: 25, type: "Pawn", color: "Black", row: 6, col: 0 },
-  { id: 26, type: "Pawn", color: "Black", row: 6, col: 1 },
-  { id: 27, type: "Pawn", color: "Black", row: 6, col: 2 },
-  { id: 28, type: "Pawn", color: "Black", row: 6, col: 3 },
-  { id: 29, type: "Pawn", color: "Black", row: 6, col: 4 },
-  { id: 30, type: "Pawn", color: "Black", row: 6, col: 5 },
-  { id: 31, type: "Pawn", color: "Black", row: 6, col: 6 },
-  { id: 32, type: "Pawn", color: "Black", row: 6, col: 7 },
+  { id: 25, type: "NecroPawn", color: "Black", row: 6, col: 0 },
+  { id: 26, type: "NecroPawn", color: "Black", row: 6, col: 1 },
+  { id: 27, type: "NecroPawn", color: "Black", row: 6, col: 2 },
+  { id: 28, type: "NecroPawn", color: "Black", row: 6, col: 3 },
+  { id: 29, type: "NecroPawn", color: "Black", row: 6, col: 4 },
+  { id: 30, type: "NecroPawn", color: "Black", row: 6, col: 5 },
+  { id: 31, type: "NecroPawn", color: "Black", row: 6, col: 6 },
+  { id: 32, type: "NecroPawn", color: "Black", row: 6, col: 7 },
 ]);
