@@ -5,6 +5,8 @@ import * as Knight from '~/pixi/pieces/basic/Knight';
 import * as Bishop from '~/pixi/pieces/basic/Bishop';
 import * as King from '~/pixi/pieces/basic/King';
 import * as Necromancer from '~/pixi/pieces/necro/Necromancer';
+import * as NecroPawn from '~/pixi/pieces/necro/NecroPawn';
+
 
 /**
  * Mapping of piece types to their associated highlight logic modules.
@@ -18,6 +20,7 @@ const pieceLogicMap = {
   Bishop,
   King,
   Necromancer,
+  NecroPawn,
 };
 
 /**
