@@ -1,12 +1,27 @@
-/*
-Summary:
-The NecroPawn is a corrupted pawn that serves the Necromancer race. It can march forward like any 
-ordinary pawn, but beneath its humble shell lies a terrifying ability — the power to self-destruct 
-in a burst of necrotic energy, obliterating everything around it, including allies.
+// Description:
+// This file defines the **NecroPawn**, a corrupted variant of the standard Pawn in the Battle Chess game.
+//
+// Overview:
+// - The NecroPawn is a Level 2 unit belonging to the **Necromancer Race**.
+// - It inherits standard Pawn movement: forward marching and diagonal captures.
+// - Its true power lies in its devastating **Sacrifice** ability.
+//
+// Special Ability – Sacrifice:
+// - The player can activate Sacrifice by **clicking the NecroPawn twice**:
+//   1. First click: Highlights normal moves and the unit itself (in blue).
+//   2. Second click: Highlights all adjacent tiles (AoE) in red.
+//   3. Third click: Detonates the NecroPawn, destroying itself and all surrounding pieces — both ally and enemy.
+// - To cancel Sacrifice mode, the player may simply click a different square.
+//
+// Behavior Notes:
+// - The explosion affects all 8 surrounding tiles + the NecroPawn itself.
+// - There is no confirmation dialog — detonation occurs instantly after the third click.
+// - This ability overrides all normal movement once sacrifice mode is engaged.
+//
+// Usage:
+// - Integrated with the global `clickHandler`, `highlight` system, and board state management.
+// - A powerful tactical unit capable of punishing dense clusters of enemies — or misused, friendly fire.
 
-Clicking once highlights its moves. Clicking a second time activates sacrifice mode. Clicking again 
-confirms and triggers the explosion. To cancel, select another square instead.
-*/
 
 import { getPieceAt } from '~/pixi/utils';
 import { setSacrificeMode, sacrificeMode, setHighlights } from '~/state/gameState';
