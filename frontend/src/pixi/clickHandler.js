@@ -14,6 +14,7 @@ import { handlePieceMove } from '~/pixi/logic/handlePieceMove';
 import { clearBoardState } from '~/pixi/logic/clearBoardState';
 import { drawBoard } from '~/pixi/drawBoard';
 import { handleDeadLauncherClick } from "./logic/handleDeadLauncherClick";
+import { handleGhoulKingClick } from "./logic/handleGhoulKingClick";
 
 
 /**
@@ -61,6 +62,13 @@ export async function handleSquareClick(rowIndex, columnIndex, pixiApp) {
 
   // === 3. Handle special DeadLauncher behavior
   if (await handleDeadLauncherClick(rowIndex, columnIndex, pixiApp)) {
+    return;
+  }
+
+  console.log("Clicked piece:", clickedPiece);
+  console.log("Selected square in clickhandler:", currentSelection);
+  // 3. Handle special GhoulKing behavior
+  if (await handleGhoulKingClick(rowIndex, columnIndex, pixiApp)) {
     return;
   }
 
