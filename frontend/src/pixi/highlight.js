@@ -6,6 +6,7 @@ import * as Bishop from '~/pixi/pieces/basic/Bishop';
 import * as King from '~/pixi/pieces/basic/King';
 import * as Necromancer from '~/pixi/pieces/necro/Necromancer';
 import * as NecroPawn from '~/pixi/pieces/necro/NecroPawn';
+import * as DeadLauncher from '~/pixi/pieces/necro/DeadLauncher';
 
 
 /**
@@ -21,6 +22,7 @@ const pieceLogicMap = {
   King,
   Necromancer,
   NecroPawn,
+  DeadLauncher,
 };
 
 /**

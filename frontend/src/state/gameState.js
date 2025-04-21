@@ -6,6 +6,8 @@ export const [resurrectionTargets, setResurrectionTargets] = createSignal([]);
 export const [pendingResurrectionColor, setPendingResurrectionColor] = createSignal(null);
 export const [sacrificeMode, setSacrificeMode] = createSignal(null);
 export const [sacrificeArmed, setSacrificeArmed] = createSignal(false);
+export const [launchMode, setLaunchMode] = createSignal(null);
+export const [isInLoadingMode, setIsInLoadingMode] = createSignal(false);
 
 
 // Corrected standard chess layout
@@ -29,14 +31,14 @@ export const [pieces, setPieces] = createSignal([
   { id: 16, type: "Pawn", color: "White", row: 1, col: 7 },
 
   // Black Pieces (bottom of the board)
-  { id: 17, type: "Rook", color: "Black", row: 7, col: 0 },
+  { id: 17, type: "DeadLauncher", color: "Black", row: 7, col: 0, pawnLoaded: false },
   { id: 18, type: "Knight", color: "Black", row: 7, col: 1 },
   { id: 19, type: "Necromancer", color: "Black", row: 7, col: 2 },
   { id: 20, type: "Queen", color: "Black", row: 7, col: 3 },
   { id: 21, type: "King", color: "Black", row: 7, col: 4 },
   { id: 22, type: "Necromancer", color: "Black", row: 7, col: 5 },
   { id: 23, type: "Knight", color: "Black", row: 7, col: 6 },
-  { id: 24, type: "Rook", color: "Black", row: 7, col: 7 },
+  { id: 24, type: "DeadLauncher", color: "Black", row: 7, col: 7, pawnLoaded: false },
   { id: 25, type: "NecroPawn", color: "Black", row: 6, col: 0 },
   { id: 26, type: "NecroPawn", color: "Black", row: 6, col: 1 },
   { id: 27, type: "NecroPawn", color: "Black", row: 6, col: 2 },
