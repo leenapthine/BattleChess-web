@@ -3,7 +3,7 @@ import { pieces, highlights } from '~/state/gameState';
 import { Assets, Sprite } from 'pixi.js';
 import { isSquareSelected } from '~/pixi/utils';
 import { TILE_SIZE } from '~/pixi/constants';
-import { resurrectionTargets } from '~/state/gameState';
+import { resurrectionTargets, isInLoadingMode } from '~/state/gameState';
 
 const loadedTextures = {};
 
@@ -36,7 +36,7 @@ export async function drawBoard(pixiApplication, onSquareClick) {
       const isDarkSquare = (rowIndex + columnIndex) % 2 === 1;
       const squareColor = isDarkSquare ? 0x005500 : 0x55FF55;
 
-      const squareIsSelected = isSquareSelected(rowIndex, columnIndex);
+      const squareIsSelected = isSquareSelected(rowIndex, columnIndex) && !isInLoadingMode();
       const highlightData = getHighlightData(rowIndex, columnIndex);
       const squareIsResurrectionTarget = resurrectionTargets().some(
         pos => pos.row === rowIndex && pos.col === columnIndex
