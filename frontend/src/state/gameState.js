@@ -8,6 +8,7 @@ export const [sacrificeMode, setSacrificeMode] = createSignal(null);
 export const [sacrificeArmed, setSacrificeArmed] = createSignal(false);
 export const [launchMode, setLaunchMode] = createSignal(null);
 export const [isInLoadingMode, setIsInLoadingMode] = createSignal(false);
+export const [isInSacrificeSelectionMode, setIsInSacrificeSelectionMode] = createSignal(false);
 
 
 // Corrected standard chess layout
@@ -34,7 +35,7 @@ export const [pieces, setPieces] = createSignal([
   { id: 17, type: "DeadLauncher", color: "Black", row: 7, col: 0, pawnLoaded: false, stunned: false, raisesLeft: 0  },
   { id: 18, type: "GhostKnight", color: "Black", row: 7, col: 1, pawnLoaded: false, stunned: false, raisesLeft: 0 },
   { id: 19, type: "Necromancer", color: "Black", row: 7, col: 2, pawnLoaded: false, stunned: false, raisesLeft: 0 },
-  { id: 20, type: "Queen", color: "Black", row: 7, col: 3, pawnLoaded: false, stunned: false, raisesLeft: 0 },
+  { id: 20, type: "QueenOfBones", color: "Black", row: 7, col: 3, pawnLoaded: false, stunned: false, raisesLeft: 0 },
   { id: 21, type: "GhoulKing", color: "Black", row: 7, col: 4, pawnLoaded: false, stunned: false, raisesLeft: 1 },
   { id: 22, type: "Necromancer", color: "Black", row: 7, col: 5, pawnLoaded: false, stunned: false, raisesLeft: 0 },
   { id: 23, type: "GhostKnight", color: "Black", row: 7, col: 6, pawnLoaded: false, stunned: false, raisesLeft: 0 },

@@ -55,7 +55,7 @@ export async function handlePieceMove(destination, pixiApp) {
   const movedVersion = { ...movingPiece, row: destination.row, col: destination.col };
   applyStunEffect(movedVersion, updatedPieces);
   
-  // Handle resurrection prompts (e.g. Necromancer ability)
+  // Handle resurrection prompts (e.g. Necromancer / QueenOfBones ability)
   triggerResurrectionPrompt(movingPiece, capturedPiece, destination, updatedPieces);
 
   // Redraw the board

@@ -9,7 +9,7 @@ import * as NecroPawn from '~/pixi/pieces/necro/NecroPawn';
 import * as DeadLauncher from '~/pixi/pieces/necro/DeadLauncher';
 import * as GhostKnight from '~/pixi/pieces/necro/GhostKnight';
 import * as GhoulKing from '~/pixi/pieces/necro/GhoulKing';
-
+import * as QueenOfBones from '~/pixi/pieces/necro/QueenOfBones';
 
 /**
  * Mapping of piece types to their associated highlight logic modules.
@@ -27,6 +27,7 @@ const pieceLogicMap = {
   DeadLauncher,
   GhostKnight,
   GhoulKing,
+  QueenOfBones,
 };
 
 /**
