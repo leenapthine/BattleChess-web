@@ -77,6 +77,10 @@ export async function handleSquareClick(rowIndex, columnIndex, pixiApp) {
   if (clickedPiece && !isSquareSelected(rowIndex, columnIndex)) {
     await clearBoardState({ preserveLaunch: true });
     setSelectedSquare({ row: rowIndex, col: columnIndex });
+    if (clickedPiece.stunned) {
+      console.log("Piece is stunned and cannot be selected.");
+      return;
+    } 
 
     const highlightList = [];
     highlightValidMovesForPiece(
