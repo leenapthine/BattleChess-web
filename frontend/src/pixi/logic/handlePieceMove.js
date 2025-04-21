@@ -11,6 +11,7 @@ import { getPieceAt } from '~/pixi/utils';
 import { drawBoard } from '~/pixi/drawBoard';
 import { handleSquareClick } from '~/pixi/clickHandler';
 import { triggerResurrectionPrompt } from '~/pixi/logic/handleResurrectionClick';
+import { applyStunEffect } from '~/pixi/pieces/necro/GhostKnight';
 
 /**
  * Moves the currently selected piece to a target destination,
@@ -50,6 +51,10 @@ export async function handlePieceMove(destination, pixiApp) {
   setHighlights([]);
   setSacrificeMode(null);
 
+  // Apply GhostKnight stun logic if needed
+  const movedVersion = { ...movingPiece, row: destination.row, col: destination.col };
+  applyStunEffect(movedVersion, updatedPieces);
+  
   // Handle resurrection prompts (e.g. Necromancer ability)
   triggerResurrectionPrompt(movingPiece, capturedPiece, destination, updatedPieces);
 
