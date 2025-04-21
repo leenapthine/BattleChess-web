@@ -8,6 +8,7 @@ import * as Necromancer from '~/pixi/pieces/necro/Necromancer';
 import * as NecroPawn from '~/pixi/pieces/necro/NecroPawn';
 import * as DeadLauncher from '~/pixi/pieces/necro/DeadLauncher';
 import * as GhostKnight from '~/pixi/pieces/necro/GhostKnight';
+import * as GhoulKing from '~/pixi/pieces/necro/GhoulKing';
 
 
 /**
@@ -25,6 +26,7 @@ const pieceLogicMap = {
   NecroPawn,
   DeadLauncher,
   GhostKnight,
+  GhoulKing,
 };
 
 /**
