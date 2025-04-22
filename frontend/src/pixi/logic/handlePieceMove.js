@@ -12,53 +12,64 @@ import { drawBoard } from '~/pixi/drawBoard';
 import { handleSquareClick } from '~/pixi/clickHandler';
 import { triggerResurrectionPrompt } from '~/pixi/logic/handleResurrectionClick';
 import { applyStunEffect } from '~/pixi/pieces/necro/GhostKnight';
+import { handlePawnHopperPostMove } from '~/pixi/pieces/beasts/PawnHopper';
 
 /**
- * Moves the currently selected piece to a target destination,
- * handles capturing logic, resets interaction state, and redraws the board.
+ * Handles the movement of the currently selected piece to a destination square.
+ * Applies standard and ability-specific effects (e.g., capture, stun, resurrection).
  *
- * @param {{ row: number, col: number }} destination - The board square to move to.
- * @param {Application} pixiApp - The PixiJS application instance managing the canvas.
- * @returns {Promise<boolean>} True if the move was executed successfully.
+ * @param {{ row: number, col: number }} destination - Target square for the move.
+ * @param {Application} pixiApp - The PixiJS application instance rendering the board.
+ * @returns {Promise<boolean>} True if the move completed successfully.
  */
 export async function handlePieceMove(destination, pixiApp) {
-  const currentPieces = pieces();
-  const from = selectedSquare();
+  const allPieces = pieces();
+  const fromSquare = selectedSquare();
 
-  if (!from) return false;
+  if (!fromSquare) return false;
 
-  const movingPiece = currentPieces.find(
-    piece => piece.row === from.row && piece.col === from.col
+  const selectedPiece = allPieces.find(
+    piece => piece.row === fromSquare.row && piece.col === fromSquare.col
   );
 
-  if (!movingPiece) return false;
+  if (!selectedPiece) return false;
 
-  const capturedPiece = getPieceAt(destination, currentPieces);
+  let capturedPiece = getPieceAt(destination, allPieces);
 
-  // Update the board: remove captured piece, move selected piece
-  const updatedPieces = currentPieces
+  // Step 1: Move the selected piece and remove any directly captured piece
+  const movedPieceList = allPieces
     .filter(piece => !(piece.row === destination.row && piece.col === destination.col))
-    .map(piece => {
-      if (piece.row === from.row && piece.col === from.col) {
-        return { ...piece, row: destination.row, col: destination.col };
-      }
-      return piece;
-    });
+    .map(piece =>
+      piece.row === fromSquare.row && piece.col === fromSquare.col
+        ? { ...piece, row: destination.row, col: destination.col }
+        : piece
+    );
 
-  // Apply updated state
-  setPieces(updatedPieces);
+  // Step 2: Handle PawnHopper-specific hop capture logic
+  const { updatedPieces: finalPieceList, captured: hopCapturedPiece } = handlePawnHopperPostMove(
+    fromSquare,
+    destination,
+    movedPieceList,
+    selectedPiece,
+    selectedPiece.color
+  );
+
+  if (hopCapturedPiece) {
+    capturedPiece = hopCapturedPiece;
+  }
+
+  // Step 3: Commit state updates
+  setPieces(finalPieceList);
   setSelectedSquare(null);
   setHighlights([]);
   setSacrificeMode(null);
 
-  // Apply GhostKnight stun logic if needed
-  const movedVersion = { ...movingPiece, row: destination.row, col: destination.col };
-  applyStunEffect(movedVersion, updatedPieces);
-  
-  // Handle resurrection prompts (e.g. Necromancer / QueenOfBones ability)
-  triggerResurrectionPrompt(movingPiece, capturedPiece, destination, updatedPieces);
+  // Step 4: Apply any passive effects triggered by the move
+  const movedPieceFinal = { ...selectedPiece, row: destination.row, col: destination.col };
+  applyStunEffect(movedPieceFinal, finalPieceList);
+  triggerResurrectionPrompt(selectedPiece, capturedPiece, destination, finalPieceList);
 
-  // Redraw the board
+  // Step 5: Redraw the board
   await drawBoard(pixiApp, handleSquareClick);
   return true;
 }
