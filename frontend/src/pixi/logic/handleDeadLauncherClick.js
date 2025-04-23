@@ -80,12 +80,15 @@ export async function handleDeadLauncherClick(rowIndex, columnIndex, pixiApp) {
     if (clickedPiece.pawnLoaded && !launchMode()) {
       // Step 4: Enter launch mode
       setLaunchMode({ ...clickedPiece });
-      const redHighlights = getLaunchTargets(clickedPiece, allPieces).map(target => ({
-        ...target,
-        color: 0xff0000,
-      }));
-      redHighlights.push({ row: rowIndex, col: columnIndex, color: 0xff0000 });
-      setHighlights(redHighlights);
+      const highlightList = [];
+      highlightMoves(
+        clickedPiece,
+        (highlightRow, highlightCol, color) => {
+          highlightList.push({ row: highlightRow, col: highlightCol, color });
+        },
+        allPieces
+      );
+      setHighlights(highlightList);
       await drawBoard(pixiApp, handleSquareClick);
       return true;
     }

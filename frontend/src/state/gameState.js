@@ -10,19 +10,20 @@ export const [launchMode, setLaunchMode] = createSignal(null);
 export const [isInLoadingMode, setIsInLoadingMode] = createSignal(false);
 export const [isInSacrificeSelectionMode, setIsInSacrificeSelectionMode] = createSignal(false);
 export const [capturedPiece, setCapturedPiece] = createSignal(null);
+export const [isInBoulderMode, setIsInBoulderMode] = createSignal(false);
 
 
 // Corrected standard chess layout
 export const [pieces, setPieces] = createSignal([
   // White Pieces (top of the board)
-  { id: 1, type: "Rook", color: "White", row: 0, col: 0, pawnLoaded: false, stunned: false, raisesLeft: 0 },
+  { id: 1, type: "BoulderThrower", color: "White", row: 0, col: 0, pawnLoaded: false, stunned: false, raisesLeft: 0 },
   { id: 2, type: "BeastKnight", color: "White", row: 0, col: 1, pawnLoaded: false, stunned: false, raisesLeft: 0 },
   { id: 3, type: "BeastDruid", color: "White", row: 0, col: 2, pawnLoaded: false, stunned: false, raisesLeft: 0 },
   { id: 4, type: "Queen", color: "White", row: 0, col: 3, pawnLoaded: false, stunned: false, raisesLeft: 0 },
   { id: 5, type: "King", color: "White", row: 0, col: 4, pawnLoaded: false, stunned: false, raisesLeft: 0 },
   { id: 6, type: "BeastDruid", color: "White", row: 0, col: 5, pawnLoaded: false, stunned: false, raisesLeft: 0 },
   { id: 7, type: "BeastKnight", color: "White", row: 0, col: 6, pawnLoaded: false, stunned: false, raisesLeft: 0 },
-  { id: 8, type: "Rook", color: "White", row: 0, col: 7, pawnLoaded: false, stunned: false, raisesLeft: 0 },
+  { id: 8, type: "BoulderThrower", color: "White", row: 0, col: 7, pawnLoaded: false, stunned: false, raisesLeft: 0 },
   { id: 9,  type: "PawnHopper", color: "White", row: 1, col: 0, pawnLoaded: false, stunned: false, raisesLeft: 0 },
   { id: 10, type: "PawnHopper", color: "White", row: 1, col: 1, pawnLoaded: false, stunned: false, raisesLeft: 0 },
   { id: 11, type: "PawnHopper", color: "White", row: 1, col: 2, pawnLoaded: false, stunned: false, raisesLeft: 0 },
