@@ -17,22 +17,17 @@ import { getPieceAt } from '~/pixi/utils';
 import { launchMode, isInLoadingMode } from '~/state/gameState';
 
 /**
- * Highlights all valid DeadLauncher moves and special ability targets.
- * 
- * Behavior varies depending on state:
- * - Loading mode: highlights adjacent tiles in cyan.
- * - Launch mode: highlights targets in red.
- * - Normal mode: highlights rook-style moves and captures.
+ * Highlights DeadLauncher movement, loading, and launch capture zones.
  *
- * @param {Object} piece - The DeadLauncher piece object.
- * @param {Function} addHighlight - Function to register highlights.
- * @param {Array} allPieces - All current pieces on the board.
+ * @param {Object} piece - The DeadLauncher piece.
+ * @param {Function} addHighlight - Function to register highlighted tiles.
+ * @param {Array} allPieces - All current board pieces.
  */
 export function highlightMoves(piece, addHighlight, allPieces) {
-  const inLaunchMode = launchMode()?.id === piece.id;
+  const isInLaunchMode = launchMode()?.id === piece.id;
   const isPawnLoaded = piece.pawnLoaded === true;
 
-  // Step 2: Loading mode - highlight adjacent squares
+  // Step 2: Loading mode - highlight adjacent squares in cyan
   if (isInLoadingMode() && !isPawnLoaded) {
     const adjacentTiles = getAdjacentTiles(piece);
     for (const tile of adjacentTiles) {
@@ -41,17 +36,17 @@ export function highlightMoves(piece, addHighlight, allPieces) {
     return;
   }
 
-  // Step 5: Launch mode - highlight enemy targets in red
-  if (inLaunchMode && isPawnLoaded) {
-    const launchTargets = getLaunchTargets(piece, allPieces);
-    for (const target of launchTargets) {
-      addHighlight(target.row, target.col, 0xff0000);
+  // Step 5: Launch mode - highlight 3-distance Manhattan perimeter tiles in red
+  if (isInLaunchMode && isPawnLoaded) {
+    const launchTiles = getLaunchTargets(piece);
+    for (const tile of launchTiles) {
+      addHighlight(tile.row, tile.col, 0xff0000);
     }
     return;
   }
 
   // Step 1 or 4: Normal rook movement and captures
-  if (!isInLoadingMode() && !inLaunchMode) {
+  if (!isInLoadingMode() && !isInLaunchMode) {
     const { moves, captures } = getRookMoves(piece, allPieces);
     for (const move of moves) {
       addHighlight(move.row, move.col, 0xffff00);
@@ -68,7 +63,7 @@ export function highlightMoves(piece, addHighlight, allPieces) {
  * @param {Object} piece - The piece to get adjacent tiles for.
  * @returns {Array} List of adjacent positions.
  */
-function getAdjacentTiles(piece) {
+export function getAdjacentTiles(piece) {
   const directions = [
     { dx: 1, dy: 0 },
     { dx: -1, dy: 0 },
@@ -121,35 +116,32 @@ export function getRookMoves(piece, allPieces) {
 }
 
 /**
- * Returns all enemy tiles within 3-tile Manhattan range of a DeadLauncher.
+ * Returns all tiles on the exact Manhattan perimeter distance of 3.
+ * Used for DeadLauncher red highlighting in launch mode.
  *
  * @param {Object} piece - The DeadLauncher.
- * @param {Array} allPieces - All current board pieces.
- * @returns {Array} List of valid target positions.
+ * @returns {Array} List of tile positions exactly 3 tiles away.
  */
-export function getLaunchTargets(piece, allPieces) {
-  const launchRange = 3;
-  const targets = [];
+export function getLaunchTargets(piece) {
+  const captureTiles = [];
 
-  for (let dx = -launchRange; dx <= launchRange; dx++) {
-    for (let dy = -launchRange; dy <= launchRange; dy++) {
-      const distance = Math.abs(dx) + Math.abs(dy);
+  for (let dx = -3; dx <= 3; dx++) {
+    for (let dy = -3; dy <= 3; dy++) {
+      const manhattanDistance = Math.abs(dx) + Math.abs(dy);
       const targetRow = piece.row + dy;
       const targetCol = piece.col + dx;
 
       if (
-        distance > 0 &&
-        distance <= launchRange &&
+        manhattanDistance === 3 &&
         targetRow >= 0 && targetRow < 8 &&
         targetCol >= 0 && targetCol < 8
       ) {
-        const occupant = getPieceAt({ row: targetRow, col: targetCol }, allPieces);
-        if (occupant && occupant.color !== piece.color) {
-          targets.push({ row: targetRow, col: targetCol });
-        }
+        captureTiles.push({ row: targetRow, col: targetCol });
       }
     }
   }
 
-  return targets;
+  return captureTiles;
 }
+
+

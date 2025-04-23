@@ -15,6 +15,7 @@ import { clearBoardState } from '~/pixi/logic/clearBoardState';
 import { drawBoard } from '~/pixi/drawBoard';
 import { handleDeadLauncherClick } from "./logic/handleDeadLauncherClick";
 import { handleGhoulKingClick } from "./logic/handleGhoulKingClick";
+import { handleBoulderThrowerClick } from './pieces/beasts/BoulderThrower';
 
 
 /**
@@ -65,10 +66,13 @@ export async function handleSquareClick(rowIndex, columnIndex, pixiApp) {
     return;
   }
 
-  console.log("Clicked piece:", clickedPiece);
-  console.log("Selected square in clickhandler:", currentSelection);
   // 3. Handle special GhoulKing behavior
   if (await handleGhoulKingClick(rowIndex, columnIndex, pixiApp)) {
+    return;
+  }
+
+  // 4. Handle BoulderThrower click logic
+  if (await handleBoulderThrowerClick(rowIndex, columnIndex, pixiApp)) {
     return;
   }
 
