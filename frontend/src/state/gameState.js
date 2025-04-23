@@ -16,12 +16,12 @@ export const [capturedPiece, setCapturedPiece] = createSignal(null);
 export const [pieces, setPieces] = createSignal([
   // White Pieces (top of the board)
   { id: 1, type: "Rook", color: "White", row: 0, col: 0, pawnLoaded: false, stunned: false, raisesLeft: 0 },
-  { id: 2, type: "Knight", color: "White", row: 0, col: 1, pawnLoaded: false, stunned: false, raisesLeft: 0 },
-  { id: 3, type: "Bishop", color: "White", row: 0, col: 2, pawnLoaded: false, stunned: false, raisesLeft: 0 },
+  { id: 2, type: "BeastKnight", color: "White", row: 0, col: 1, pawnLoaded: false, stunned: false, raisesLeft: 0 },
+  { id: 3, type: "BeastDruid", color: "White", row: 0, col: 2, pawnLoaded: false, stunned: false, raisesLeft: 0 },
   { id: 4, type: "Queen", color: "White", row: 0, col: 3, pawnLoaded: false, stunned: false, raisesLeft: 0 },
   { id: 5, type: "King", color: "White", row: 0, col: 4, pawnLoaded: false, stunned: false, raisesLeft: 0 },
-  { id: 6, type: "Bishop", color: "White", row: 0, col: 5, pawnLoaded: false, stunned: false, raisesLeft: 0 },
-  { id: 7, type: "Knight", color: "White", row: 0, col: 6, pawnLoaded: false, stunned: false, raisesLeft: 0 },
+  { id: 6, type: "BeastDruid", color: "White", row: 0, col: 5, pawnLoaded: false, stunned: false, raisesLeft: 0 },
+  { id: 7, type: "BeastKnight", color: "White", row: 0, col: 6, pawnLoaded: false, stunned: false, raisesLeft: 0 },
   { id: 8, type: "Rook", color: "White", row: 0, col: 7, pawnLoaded: false, stunned: false, raisesLeft: 0 },
   { id: 9,  type: "PawnHopper", color: "White", row: 1, col: 0, pawnLoaded: false, stunned: false, raisesLeft: 0 },
   { id: 10, type: "PawnHopper", color: "White", row: 1, col: 1, pawnLoaded: false, stunned: false, raisesLeft: 0 },
