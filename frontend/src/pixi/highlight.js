@@ -11,6 +11,8 @@ import * as GhostKnight from '~/pixi/pieces/necro/GhostKnight';
 import * as GhoulKing from '~/pixi/pieces/necro/GhoulKing';
 import * as QueenOfBones from '~/pixi/pieces/necro/QueenOfBones';
 import * as PawnHopper from '~/pixi/pieces/beasts/PawnHopper';
+import * as BeastKnight from '~/pixi/pieces/beasts/BeastKnight';
+import * as BeastDruid from '~/pixi/pieces/beasts/BeastDruid';
 
 /**
  * Mapping of piece types to their associated highlight logic modules.
@@ -30,6 +32,8 @@ const pieceLogicMap = {
   GhoulKing,
   QueenOfBones,
   PawnHopper,
+  BeastKnight,
+  BeastDruid,
 };
 
 /**
