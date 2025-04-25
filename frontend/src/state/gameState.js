@@ -20,7 +20,7 @@ export const [pieces, setPieces] = createSignal([
   { id: 2, type: "BeastKnight", color: "White", row: 0, col: 1, pawnLoaded: false, stunned: false, raisesLeft: 0 },
   { id: 3, type: "BeastDruid", color: "White", row: 0, col: 2, pawnLoaded: false, stunned: false, raisesLeft: 0 },
   { id: 4, type: "Queen", color: "White", row: 0, col: 3, pawnLoaded: false, stunned: false, raisesLeft: 0 },
-  { id: 5, type: "King", color: "White", row: 0, col: 4, pawnLoaded: false, stunned: false, raisesLeft: 0 },
+  { id: 5, type: "FrogKing", color: "White", row: 0, col: 4, pawnLoaded: false, stunned: false, raisesLeft: 0 },
   { id: 6, type: "BeastDruid", color: "White", row: 0, col: 5, pawnLoaded: false, stunned: false, raisesLeft: 0 },
   { id: 7, type: "BeastKnight", color: "White", row: 0, col: 6, pawnLoaded: false, stunned: false, raisesLeft: 0 },
   { id: 8, type: "BoulderThrower", color: "White", row: 0, col: 7, pawnLoaded: false, stunned: false, raisesLeft: 0 },
