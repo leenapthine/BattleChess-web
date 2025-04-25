@@ -24,7 +24,9 @@
 
 
 import { getPieceAt } from '~/pixi/utils';
-import { setSacrificeMode, sacrificeMode, setHighlights } from '~/state/gameState';
+import { setSacrificeMode, sacrificeMode, setHighlights, setPieces } from '~/state/gameState';
+import { handleCapture } from '~/pixi/logic/handleCapture';
+
 
 /**
  * Highlight valid moves for a NecroPawn.
@@ -95,20 +97,28 @@ export function highlightMoves(piece, addHighlight, allPieces) {
  * Executes the sacrifice ability: removes all pieces in 8 surrounding tiles + the NecroPawn itself.
  *
  * @param {Object} necroPawn - The NecroPawn piece object.
- * @param {Function} setPieces - Setter for the global pieces signal.
  * @param {Array} allPieces - The current list of pieces on the board.
  */
-export function performNecroPawnSacrifice(necroPawn, setPiecesFn, allPieces) {
+export function performNecroPawnSacrifice(necroPawn, allPieces) {
   const captureArea = getSurroundingTiles(necroPawn.row, necroPawn.col);
   captureArea.push({ row: necroPawn.row, col: necroPawn.col });
 
-  const survivors = allPieces.filter(piece => {
-    return !captureArea.some(pos =>
+  const victims = allPieces.filter(piece => {
+    return captureArea.some(pos =>
       pos.row === piece.row && pos.col === piece.col
     );
   });
+	
+  // Apply handleCapture to each victim
+	let updatedPieces = allPieces;
+	for (const victim of victims) {
+		updatedPieces = handleCapture(victim, updatedPieces, necroPawn);
+	}
 
-  setPiecesFn(survivors);
+	// Also remove the necroPawn itself
+  updatedPieces = updatedPieces.filter(p => p.id !== necroPawn.id);
+
+	setPieces(updatedPieces);
   setHighlights([]);
   setSacrificeMode(null);
 }
