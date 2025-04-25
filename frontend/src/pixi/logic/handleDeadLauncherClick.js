@@ -15,6 +15,8 @@ import { getLaunchTargets, highlightMoves } from '../pieces/necro/DeadLauncher';
 import { drawBoard } from '../drawBoard';
 import { handleSquareClick } from '../clickHandler';
 import { clearBoardState } from './clearBoardState';
+import { handleCapture } from '~/pixi/logic/handleCapture';
+
 
 /**
  * Handles DeadLauncher-specific interactions:
@@ -41,7 +43,9 @@ export async function handleDeadLauncherClick(rowIndex, columnIndex, pixiApp) {
       const remainingPieces = allPieces.filter(
         piece => !(piece.id === activeLauncher.id || (piece.row === rowIndex && piece.col === columnIndex))
       );
-      setPieces([...remainingPieces, updatedLauncher]);
+      const captured = getPieceAt({ row: rowIndex, col: columnIndex }, allPieces);
+      const updatedPieces = handleCapture(captured, allPieces, updatedLauncher);
+      setPieces(updatedPieces);
       setLaunchMode(null);
       setSelectedSquare(null);
       setHighlights([]);

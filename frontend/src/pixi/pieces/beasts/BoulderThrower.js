@@ -26,6 +26,7 @@ import {
 } from '~/state/gameState';
 import { drawBoard } from '~/pixi/drawBoard';
 import { handleSquareClick } from '~/pixi/clickHandler';
+import { handleCapture } from '~/pixi/logic/handleCapture';
 
 /**
  * Highlights legal movement tiles for the BoulderThrower.
@@ -102,7 +103,9 @@ export async function handleBoulderThrowerClick(row, col, pixiApp) {
     const manhattanDistance = Math.abs(row - currentSelection.row) + Math.abs(col - currentSelection.col);
 
     if (targetPiece && targetPiece.color !== selectedPiece.color && manhattanDistance === 3) {
-      setPieces(currentPieces.filter(p => !(p.row === row && p.col === col)));
+      const captured = getPieceAt({ row, col }, currentPieces);
+      const updatedPieces = handleCapture(captured, currentPieces, selectedPiece);
+      setPieces(updatedPieces);
       setSelectedSquare(null);
       setHighlights([]);
       setIsInBoulderMode(false);

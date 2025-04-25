@@ -4,7 +4,6 @@ import {
   setSacrificeMode,
   setSacrificeArmed,
   setSelectedSquare,
-  setPieces,
   setHighlights,
   selectedSquare,
   pieces
@@ -28,7 +27,7 @@ export async function handleSacrificeClick(row, col, pixiApp, allPieces) {
 
   if (detonation) {
     const pawn = sacrificeMode();
-    performNecroPawnSacrifice(pawn, setPieces, allPieces);
+    performNecroPawnSacrifice(pawn, allPieces);
 
     setSacrificeMode(null);
     setSacrificeArmed(false);
