@@ -1,4 +1,3 @@
-// Filename: beastDruid.js
 // Description: Logic module for the BeastDruid, a level 2 Bishop from the BeastMaster Guild.
 //
 // Main Functions:

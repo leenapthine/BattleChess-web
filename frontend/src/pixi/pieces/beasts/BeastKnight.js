@@ -1,4 +1,3 @@
-// Filename: beastKnight.js
 // Description: Logic module for the BeastKnight piece, a level 2 Knight from the BeastMaster Guild.
 //
 // Main Functions:

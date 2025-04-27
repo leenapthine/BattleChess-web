@@ -1,4 +1,3 @@
-// Filename: boulderThrower.js
 // Description: Logic module for the BoulderThrower, a level 2 Rook from the BeastMaster Guild.
 //
 // Main Functions:

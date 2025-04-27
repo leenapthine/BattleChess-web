@@ -1,4 +1,3 @@
-// Filename: PawnHopper.js
 // Description: Logic module for the PawnHopper, a level 2 pawn from the BeastMaster Guild.
 //
 // Main Functions:

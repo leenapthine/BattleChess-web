@@ -1,4 +1,3 @@
-// Filename: ghoulKing.js
 // Description: Logic module for the GhoulKing piece, a level 2 King from the Necromancer Guild.
 //
 // Main Functions:
