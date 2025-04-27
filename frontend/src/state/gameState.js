@@ -51,7 +51,7 @@ export const [pieces, setPieces] = createSignal([
   { id: 1, type: "BoulderThrower", color: "White", row: 0, col: 0, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null },
   { id: 2, type: "BeastKnight", color: "White", row: 0, col: 1, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null },
   { id: 3, type: "BeastDruid", color: "White", row: 0, col: 2, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null },
-  { id: 4, type: "QueenOfDomination", color: "White", row: 0, col: 3, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null },
+  { id: 4, type: "QueenOfIllusions", color: "White", row: 0, col: 3, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null },
   { id: 5, type: "FrogKing", color: "White", row: 0, col: 4, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null },
   { id: 6, type: "BeastDruid", color: "White", row: 0, col: 5, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null },
   { id: 7, type: "BeastKnight", color: "White", row: 0, col: 6, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null },
