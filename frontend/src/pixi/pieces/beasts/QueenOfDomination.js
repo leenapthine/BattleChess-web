@@ -1,4 +1,3 @@
-// Filename: QueenOfDomination.js
 // Description: Logic module for QueenOfDomination, a Level 2 Queen piece from the BeastMaster Guild.
 //
 // Special Behavior:

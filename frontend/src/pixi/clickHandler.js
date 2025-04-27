@@ -18,6 +18,7 @@ import { handleDeadLauncherClick } from "./logic/handleDeadLauncherClick";
 import { handleGhoulKingClick } from "./logic/handleGhoulKingClick";
 import { handleBoulderThrowerClick } from './pieces/beasts/BoulderThrower';
 import { handleQueenOfDominationClick } from '~/pixi/logic/handleQueenOfDominationClick';
+import { handleYoungWizZapClick } from '~/pixi/pieces/wizards/youngWiz';
 
 
 /**
@@ -90,7 +91,12 @@ export async function handleSquareClick(rowIndex, columnIndex, pixiApp) {
     return;
   }
 
-  // 5. Handle QueenOfDomination click logic
+  // 5. Handle YoungWiz post-move logic
+  if (await handleYoungWizZapClick(rowIndex, columnIndex, pixiApp)) {
+    return;
+  }
+
+  // 6. Handle QueenOfDomination click logic
   if (await handleQueenOfDominationClick(rowIndex, columnIndex, pixiApp)) {
     return;
   }

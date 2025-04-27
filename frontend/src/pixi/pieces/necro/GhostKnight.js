@@ -1,4 +1,3 @@
-// Filename: ghostKnight.js
 // Description: Logic for GhostKnight piece, including movement, highlighting, and auto-stunning adjacent enemy units.
 //
 // Main Responsibilities:

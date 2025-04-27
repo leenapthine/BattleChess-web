@@ -16,6 +16,7 @@ import * as BeastDruid from '~/pixi/pieces/beasts/BeastDruid';
 import * as BoulderThrower from '~/pixi/pieces/beasts/BoulderThrower';
 import * as FrogKing from '~/pixi/pieces/beasts/FrogKing';
 import * as QueenOfDomination from '~/pixi/pieces/beasts/QueenOfDomination';
+import * as YoungWiz from '~/pixi/pieces/wizards/YoungWiz';
 
 /**
  * Mapping of piece types to their associated highlight logic modules.
@@ -40,6 +41,7 @@ const pieceLogicMap = {
   BoulderThrower,
   FrogKing,
   QueenOfDomination,
+  YoungWiz,
 };
 
 /**
