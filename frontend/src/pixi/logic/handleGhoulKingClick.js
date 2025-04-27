@@ -22,7 +22,6 @@ import { handleSquareClick } from '~/pixi/clickHandler';
  */
 export async function handleGhoulKingClick(row, col, pixiApp) {
   const currentPieces = pieces();
-  const clickedPiece = getPieceAt({ row, col }, currentPieces);
   const selectedCoord = selectedSquare();
   const selectedPiece = selectedCoord ? getPieceAt(selectedCoord, currentPieces) : null;
   const isRaiseTile = highlights().some(h => h.row === row && h.col === col && h.color === 0x00ffff);
