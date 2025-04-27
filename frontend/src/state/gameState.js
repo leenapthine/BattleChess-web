@@ -1,17 +1,49 @@
 import { createSignal } from 'solid-js';
 
 export const [selectedSquare, setSelectedSquare] = createSignal(null);
-export const [highlights, setHighlights] = createSignal([]);
-export const [resurrectionTargets, setResurrectionTargets] = createSignal([]);
-export const [pendingResurrectionColor, setPendingResurrectionColor] = createSignal(null);
-export const [sacrificeMode, setSacrificeMode] = createSignal(null);
-export const [sacrificeArmed, setSacrificeArmed] = createSignal(false);
-export const [launchMode, setLaunchMode] = createSignal(null);
-export const [isInLoadingMode, setIsInLoadingMode] = createSignal(false);
-export const [isInSacrificeSelectionMode, setIsInSacrificeSelectionMode] = createSignal(false);
-export const [capturedPiece, setCapturedPiece] = createSignal(null);
-export const [isInBoulderMode, setIsInBoulderMode] = createSignal(false);
+// Currently selected square (row, col) where the player has clicked.
+// Used to track which piece is active for movement or ability use.
 
+export const [highlights, setHighlights] = createSignal([]);
+// List of tiles (row, col, color) that are currently highlighted on the board.
+// Used for showing valid moves, captures, ability targets, etc.
+
+export const [resurrectionTargets, setResurrectionTargets] = createSignal([]);
+// List of valid squares (row, col) where a piece can be resurrected.
+// Used by Necromancer and GhoulKing resurrection abilities.
+
+export const [pendingResurrectionColor, setPendingResurrectionColor] = createSignal(null);
+// Color ("White" or "Black") of the piece being resurrected.
+// Temporarily stored while selecting resurrection tiles.
+
+export const [sacrificeMode, setSacrificeMode] = createSignal(null);
+// Tracks whether a piece (like NecroPawn) is in the middle of preparing a sacrifice ability.
+// If non-null, clicking will trigger sacrifice behavior.
+
+export const [sacrificeArmed, setSacrificeArmed] = createSignal(false);
+// True when a NecroPawn has been clicked once to "arm" its sacrifice.
+// False when the player cancels or detonates.
+
+export const [launchMode, setLaunchMode] = createSignal(null);
+// Holds the piece (like DeadLauncher) that is ready to launch a projectile.
+// If non-null, the player can click a launch target.
+
+export const [isInLoadingMode, setIsInLoadingMode] = createSignal(false);
+// True if a piece (DeadLauncher) is currently trying to load a Pawn.
+// False if normal movement mode.
+
+export const [isInSacrificeSelectionMode, setIsInSacrificeSelectionMode] = createSignal(false);
+// Used to track if the player is choosing which NecroPawn to sacrifice after a special ability is triggered.
+
+export const [capturedPiece, setCapturedPiece] = createSignal(null);
+// Tracks the most recently captured piece during move handling.
+// Used for special effects triggered by captures (e.g., QueenOfBones resurrection check).
+
+export const [isInBoulderMode, setIsInBoulderMode] = createSignal(false);
+// True if BoulderThrower has toggled into launch/capture mode instead of movement mode.
+
+export const [isInDominationMode, setIsInDominationMode] = createSignal(false);
+// True if QueenOfDomination has activated its ability to dominate a piece.
 
 // Corrected standard chess layout
 export const [pieces, setPieces] = createSignal([
@@ -19,7 +51,7 @@ export const [pieces, setPieces] = createSignal([
   { id: 1, type: "BoulderThrower", color: "White", row: 0, col: 0, pawnLoaded: false, stunned: false, raisesLeft: 0 },
   { id: 2, type: "BeastKnight", color: "White", row: 0, col: 1, pawnLoaded: false, stunned: false, raisesLeft: 0 },
   { id: 3, type: "BeastDruid", color: "White", row: 0, col: 2, pawnLoaded: false, stunned: false, raisesLeft: 0 },
-  { id: 4, type: "Queen", color: "White", row: 0, col: 3, pawnLoaded: false, stunned: false, raisesLeft: 0 },
+  { id: 4, type: "QueenOfDomination", color: "White", row: 0, col: 3, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null },
   { id: 5, type: "FrogKing", color: "White", row: 0, col: 4, pawnLoaded: false, stunned: false, raisesLeft: 0 },
   { id: 6, type: "BeastDruid", color: "White", row: 0, col: 5, pawnLoaded: false, stunned: false, raisesLeft: 0 },
   { id: 7, type: "BeastKnight", color: "White", row: 0, col: 6, pawnLoaded: false, stunned: false, raisesLeft: 0 },

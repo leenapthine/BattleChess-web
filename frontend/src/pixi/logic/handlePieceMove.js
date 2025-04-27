@@ -13,6 +13,7 @@ import { handleSquareClick } from '~/pixi/clickHandler';
 import { triggerResurrectionPrompt } from '~/pixi/logic/handleResurrectionClick';
 import { applyStunEffect } from '~/pixi/pieces/necro/GhostKnight';
 import { handlePawnHopperPostMove } from '~/pixi/pieces/beasts/PawnHopper';
+import { returnOriginalSprite } from '~/pixi/pieces/beasts/QueenOfDomination'; // ✅ new import
 
 /**
  * Handles the movement of the currently selected piece to a destination square.
@@ -37,7 +38,7 @@ export async function handlePieceMove(destination, pixiApp) {
   let capturedPiece = getPieceAt(destination, allPieces);
 
   // Step 1: Move the selected piece and remove any directly captured piece
-  const movedPieceList = allPieces
+  let movedPieceList = allPieces
     .filter(piece => !(piece.row === destination.row && piece.col === destination.col))
     .map(piece =>
       piece.row === fromSquare.row && piece.col === fromSquare.col
@@ -58,16 +59,28 @@ export async function handlePieceMove(destination, pixiApp) {
     capturedPiece = hopCapturedPiece;
   }
 
+  let trulyFinalPieces = finalPieceList;
+
+  // Step 2.5: Check if any QueenOfDomination is tracking this moved piece
+  const movedPiece = { ...selectedPiece, row: destination.row, col: destination.col };
+  const dominatingQueen = allPieces.find(p =>
+    p.type === 'QueenOfDomination' && p.pieceLoaded && p.pieceLoaded.id === movedPiece.id
+  );
+
+  if (dominatingQueen) {
+    trulyFinalPieces = returnOriginalSprite(dominatingQueen, movedPiece, finalPieceList);
+  }
+
   // Step 3: Commit state updates
-  setPieces(finalPieceList);
+  setPieces(trulyFinalPieces);
   setSelectedSquare(null);
   setHighlights([]);
   setSacrificeMode(null);
 
   // Step 4: Apply any passive effects triggered by the move
   const movedPieceFinal = { ...selectedPiece, row: destination.row, col: destination.col };
-  applyStunEffect(movedPieceFinal, finalPieceList);
-  triggerResurrectionPrompt(selectedPiece, capturedPiece, destination, finalPieceList);
+  applyStunEffect(movedPieceFinal, trulyFinalPieces);
+  triggerResurrectionPrompt(selectedPiece, capturedPiece, destination, trulyFinalPieces);
 
   // Step 5: Redraw the board
   await drawBoard(pixiApp, handleSquareClick);

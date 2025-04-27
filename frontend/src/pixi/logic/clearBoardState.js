@@ -6,6 +6,7 @@ import {
 	setSacrificeMode,
 	setSacrificeArmed,
 	setLaunchMode,
+	setIsInDominationMode,
 } from '~/state/gameState';
 import { setIsInLoadingMode } from '../../state/gameState';
 
@@ -20,6 +21,7 @@ export async function clearBoardState({ preserveLaunch = false } = {}) {
 	setSacrificeMode(null);
 	setSacrificeArmed(false);
 	setIsInLoadingMode(false);
+	setIsInDominationMode(false);
 
 	if (!preserveLaunch) {
 		setLaunchMode(null);

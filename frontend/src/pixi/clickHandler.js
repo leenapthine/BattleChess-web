@@ -4,6 +4,7 @@ import {
   pieces,
   highlights,
   setHighlights,
+  isInDominationMode,
 } from '~/state/gameState';
 
 import { highlightValidMovesForPiece } from '~/pixi/highlight';
@@ -16,6 +17,7 @@ import { drawBoard } from '~/pixi/drawBoard';
 import { handleDeadLauncherClick } from "./logic/handleDeadLauncherClick";
 import { handleGhoulKingClick } from "./logic/handleGhoulKingClick";
 import { handleBoulderThrowerClick } from './pieces/beasts/BoulderThrower';
+import { handleQueenOfDominationClick } from '~/pixi/logic/handleQueenOfDominationClick';
 
 
 /**
@@ -51,6 +53,18 @@ export async function handleSquareClick(rowIndex, columnIndex, pixiApp) {
       !isReclickedSelection
   );
 
+  // === 0. Check if in the middle of domination move
+  if (isInDominationMode()) {
+    const isClickedHighlighted = highlights().some(
+      highlight => highlight.row === rowIndex && highlight.col === columnIndex
+    );
+  
+    if (!isClickedHighlighted) {
+      console.log("Must move the dominated Queen first!");
+      return;
+    }
+  }
+
   // === 1. Check for NecroPawn sacrifice
   if (await handleSacrificeClick(rowIndex, columnIndex, pixiApp, currentPieces)) {
     return;
@@ -73,6 +87,11 @@ export async function handleSquareClick(rowIndex, columnIndex, pixiApp) {
 
   // 4. Handle BoulderThrower click logic
   if (await handleBoulderThrowerClick(rowIndex, columnIndex, pixiApp)) {
+    return;
+  }
+
+  // 5. Handle QueenOfDomination click logic
+  if (await handleQueenOfDominationClick(rowIndex, columnIndex, pixiApp)) {
     return;
   }
 
