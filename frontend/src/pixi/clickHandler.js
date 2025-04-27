@@ -19,6 +19,7 @@ import { handleGhoulKingClick } from "./logic/handleGhoulKingClick";
 import { handleBoulderThrowerClick } from './pieces/beasts/BoulderThrower';
 import { handleQueenOfDominationClick } from '~/pixi/logic/handleQueenOfDominationClick';
 import { handleYoungWizZapClick } from '~/pixi/pieces/wizards/youngWiz';
+import { handleQueenOfIllusionsSwap } from '~/pixi/pieces/wizards/QueenOfIllusions';
 
 
 /**
@@ -98,6 +99,11 @@ export async function handleSquareClick(rowIndex, columnIndex, pixiApp) {
 
   // 6. Handle QueenOfDomination click logic
   if (await handleQueenOfDominationClick(rowIndex, columnIndex, pixiApp)) {
+    return;
+  }
+
+  // 7. Handle QueenOfIllusions click logic
+  if (await handleQueenOfIllusionsSwap(rowIndex, columnIndex, pixiApp)) {
     return;
   }
 
