@@ -20,7 +20,8 @@ import { handleBoulderThrowerClick } from './pieces/beasts/BoulderThrower';
 import { handleQueenOfDominationClick } from '~/pixi/logic/handleQueenOfDominationClick';
 import { handleYoungWizZapClick } from '~/pixi/pieces/wizards/youngWiz';
 import { handleQueenOfIllusionsSwap } from '~/pixi/pieces/wizards/QueenOfIllusions';
-
+import { handleWizardTowerCapture } from './pieces/wizards/WizardTower';
+import { handleWizardKingCapture } from './pieces/wizards/WizardKing';
 
 /**
  * Handles all game board click interactions.
@@ -97,12 +98,22 @@ export async function handleSquareClick(rowIndex, columnIndex, pixiApp) {
     return;
   }
 
-  // 6. Handle QueenOfDomination click logic
+  // 6. Handle WizardTower capture logic
+  if (await handleWizardTowerCapture(rowIndex, columnIndex, pixiApp)) {
+    return;
+  }
+
+  // 7. Handle WizardKing logic
+  if (await handleWizardKingCapture(rowIndex, columnIndex, pixiApp)) {
+    return;
+  }
+
+  // 8. Handle QueenOfDomination click logic
   if (await handleQueenOfDominationClick(rowIndex, columnIndex, pixiApp)) {
     return;
   }
 
-  // 7. Handle QueenOfIllusions click logic
+  // 9. Handle QueenOfIllusions click logic
   if (await handleQueenOfIllusionsSwap(rowIndex, columnIndex, pixiApp)) {
     return;
   }
