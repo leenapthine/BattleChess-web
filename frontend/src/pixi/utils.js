@@ -37,3 +37,23 @@ export function isSquareSelected(rowIndex, columnIndex) {
     currentSelection.row === rowIndex &&
     currentSelection.col === columnIndex;
 }
+
+/**
+ * Returns all orthogonally adjacent tiles to a given piece.
+ *
+ * @param {Object} piece - The piece to get adjacent tiles for.
+ * @returns {Array} List of adjacent positions.
+ */
+export function getAdjacentTiles(piece) {
+  const directions = [
+    { dx: 1, dy: 0 },
+    { dx: -1, dy: 0 },
+    { dx: 0, dy: 1 },
+    { dx: 0, dy: -1 }
+  ];
+
+  return directions
+    .map(({ dx, dy }) => ({ row: piece.row + dy, col: piece.col + dx }))
+    .filter(pos => pos.row >= 0 && pos.row < 8 && pos.col >= 0 && pos.col < 8);
+}
+

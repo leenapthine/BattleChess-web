@@ -1,4 +1,3 @@
-// Filename: QueenOfIllusions.js
 // Description: Logic module for the Queen of Illusions, a level 2 Queen from the Wizard race.
 //
 // Main Functions:

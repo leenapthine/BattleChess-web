@@ -21,6 +21,7 @@ import * as QueenOfIllusions from '~/pixi/pieces/wizards/QueenOfIllusions';
 import * as WizardTower from '~/pixi/pieces/wizards/WizardTower';
 import * as WizardKing from '~/pixi/pieces/wizards/WizardKing';
 import * as Familiar from '~/pixi/pieces/wizards/Familiar';
+import * as Portal from '~/pixi/pieces/wizards/Portal';
 
 /**
  * Mapping of piece types to their associated highlight logic modules.
@@ -50,6 +51,7 @@ const pieceLogicMap = {
   WizardTower,
   WizardKing,
   Familiar,
+  Portal,
 };
 
 /**
