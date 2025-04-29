@@ -1,4 +1,5 @@
 import { triggerResurrectionPrompt } from '~/pixi/logic/handleResurrectionClick';
+import { setHighlights } from '../../state/gameState';
 
 /**
  * Handles removal of a captured piece and triggers post-capture logic (e.g. QueenOfBones revive).
@@ -11,6 +12,12 @@ import { triggerResurrectionPrompt } from '~/pixi/logic/handleResurrectionClick'
 export function handleCapture(capturedPiece, currentPieces, capturingPiece = null) {
   if (!capturedPiece) return currentPieces;
 
+  // Check if the captured piece is turned to stone
+  if (capturedPiece.isStone) {
+    console.log(`${capturedPiece.type} is turned to stone and cannot be captured.`);
+    return currentPieces; // Do not capture the piece
+  }
+
   const updatedPieces = currentPieces.filter(p => p.id !== capturedPiece.id);
 
   // Trigger resurrection effect if applicable
@@ -18,3 +25,4 @@ export function handleCapture(capturedPiece, currentPieces, capturingPiece = nul
 
   return updatedPieces;
 }
+

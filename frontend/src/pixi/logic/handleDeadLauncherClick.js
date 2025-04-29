@@ -38,13 +38,11 @@ export async function handleDeadLauncherClick(rowIndex, columnIndex, pixiApp) {
       target => target.row === rowIndex && target.col === columnIndex
     );
 
-    if (isTargetValid) {
-      const updatedLauncher = { ...activeLauncher, pawnLoaded: false };
-      const remainingPieces = allPieces.filter(
-        piece => !(piece.id === activeLauncher.id || (piece.row === rowIndex && piece.col === columnIndex))
-      );
+    if (isTargetValid && launchMode()) {
+      const selectedLauncher = getPieceAt(selectedPosition, allPieces);
+      selectedLauncher.pawnLoaded = false;
       const captured = getPieceAt({ row: rowIndex, col: columnIndex }, allPieces);
-      const updatedPieces = handleCapture(captured, allPieces, updatedLauncher);
+      const updatedPieces = handleCapture(captured, allPieces, selectedLauncher);
       setPieces(updatedPieces);
       setLaunchMode(null);
       setSelectedSquare(null);
