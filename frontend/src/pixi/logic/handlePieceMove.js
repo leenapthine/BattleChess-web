@@ -13,7 +13,9 @@ import { handleSquareClick } from '~/pixi/clickHandler';
 import { triggerResurrectionPrompt } from '~/pixi/logic/handleResurrectionClick';
 import { applyStunEffect } from '~/pixi/pieces/necro/GhostKnight';
 import { handlePawnHopperPostMove } from '~/pixi/pieces/beasts/PawnHopper';
-import { returnOriginalSprite } from '~/pixi/pieces/beasts/QueenOfDomination'; // ✅ new import
+import { returnOriginalSprite } from '~/pixi/pieces/beasts/QueenOfDomination';
+import { handleCapture } from '~/pixi/logic/handleCapture';
+import { clearBoardState } from './clearBoardState';
 
 /**
  * Handles the movement of the currently selected piece to a destination square.
@@ -35,54 +37,65 @@ export async function handlePieceMove(destination, pixiApp) {
 
   if (!selectedPiece) return false;
 
-  let capturedPiece = getPieceAt(destination, allPieces);
+  // Step 1: Check if there is a piece at the destination
+  const targetPiece = getPieceAt(destination, allPieces); // Get the piece at the destination
 
-  // Step 1: Move the selected piece and remove any directly captured piece
-  let movedPieceList = allPieces
-    .filter(piece => !(piece.row === destination.row && piece.col === destination.col))
-    .map(piece =>
-      piece.row === fromSquare.row && piece.col === fromSquare.col
-        ? { ...piece, row: destination.row, col: destination.col }
-        : piece
-    );
+  let updatedPieces = allPieces; // Start with the original pieces list
 
-  // Step 2: Handle PawnHopper-specific hop capture logic
+  // Step 2: Handle capture if an enemy piece is at the destination
+  if (targetPiece) {
+    // If there is a piece at the destination, attempt to handle the capture
+    updatedPieces = handleCapture(targetPiece, allPieces); // Handle the capture (removes the captured piece)
+    
+    // If handleCapture fails (i.e., if no piece is captured), we should return early
+    if (updatedPieces === allPieces) {
+      return; // Exit early if the capture failed
+    }
+  }
+
+  // Step 3: If the capture was successful, move the selected piece to the destination
+  updatedPieces = updatedPieces.map(piece =>
+    piece.row === fromSquare.row && piece.col === fromSquare.col // Find the selected piece
+      ? { ...piece, row: destination.row, col: destination.col } // Move it to the destination
+      : piece
+  );
+
+  // Step 4: Handle post-move logic
   const { updatedPieces: finalPieceList, captured: hopCapturedPiece } = handlePawnHopperPostMove(
     fromSquare,
     destination,
-    movedPieceList,
+    updatedPieces,
     selectedPiece,
     selectedPiece.color
   );
 
   if (hopCapturedPiece) {
-    capturedPiece = hopCapturedPiece;
+    updatedPieces = handleCapture(hopCapturedPiece, finalPieceList);
   }
 
-  let trulyFinalPieces = finalPieceList;
-
-  // Step 2.5: Check if any QueenOfDomination is tracking this moved piece
+  // Step 5: Check if any QueenOfDomination is tracking this moved piece
   const movedPiece = { ...selectedPiece, row: destination.row, col: destination.col };
   const dominatingQueen = allPieces.find(p =>
     p.type === 'QueenOfDomination' && p.pieceLoaded && p.pieceLoaded.id === movedPiece.id
   );
 
   if (dominatingQueen) {
-    trulyFinalPieces = returnOriginalSprite(dominatingQueen, movedPiece, finalPieceList);
+    updatedPieces = returnOriginalSprite(dominatingQueen, movedPiece, finalPieceList);
   }
 
-  // Step 3: Commit state updates
-  setPieces(trulyFinalPieces);
-  setSelectedSquare(null);
-  setHighlights([]);
-  setSacrificeMode(null);
+  // Step 6: Commit state updates
+  setPieces(updatedPieces);
+  setSelectedSquare(null); // Deselect the piece
+  setHighlights([]); // Clear any highlights
+  setSacrificeMode(null); // Clear sacrifice mode
 
-  // Step 4: Apply any passive effects triggered by the move
+  // Step 7: Apply any passive effects triggered by the move
   const movedPieceFinal = { ...selectedPiece, row: destination.row, col: destination.col };
-  applyStunEffect(movedPieceFinal, trulyFinalPieces);
-  triggerResurrectionPrompt(selectedPiece, capturedPiece, destination, trulyFinalPieces);
+  applyStunEffect(movedPieceFinal, updatedPieces);
+  triggerResurrectionPrompt(selectedPiece, targetPiece, destination, updatedPieces);
 
-  // Step 5: Redraw the board
+  // Step 8: Redraw the board
   await drawBoard(pixiApp, handleSquareClick);
-  return true;
+  return true; // Indicate a successful move
 }
+

@@ -22,6 +22,7 @@ import { handleYoungWizZapClick } from '~/pixi/pieces/wizards/youngWiz';
 import { handleQueenOfIllusionsSwap } from '~/pixi/pieces/wizards/QueenOfIllusions';
 import { handleWizardTowerCapture } from './pieces/wizards/WizardTower';
 import { handleWizardKingCapture } from './pieces/wizards/WizardKing';
+import { handleFamiliarClick } from './pieces/wizards/Familiar';
 
 /**
  * Handles all game board click interactions.
@@ -115,6 +116,11 @@ export async function handleSquareClick(rowIndex, columnIndex, pixiApp) {
 
   // 9. Handle QueenOfIllusions click logic
   if (await handleQueenOfIllusionsSwap(rowIndex, columnIndex, pixiApp)) {
+    return;
+  }
+
+  // 10. Handle Familiar click logic
+  if (await handleFamiliarClick(rowIndex, columnIndex, pixiApp)) {
     return;
   }
 
