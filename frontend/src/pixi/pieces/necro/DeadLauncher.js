@@ -13,8 +13,9 @@
 // - Clicking a red tile destroys the enemy there and consumes the pawn.
 // - While loaded (but not launching), the DeadLauncher can move normally.
 
-import { getPieceAt } from '~/pixi/utils';
+import { highlightMoves as highlightRookMoves } from '~/pixi/pieces/basic/Rook';
 import { launchMode, isInLoadingMode } from '~/state/gameState';
+import { getAdjacentTiles } from '../../utils';
 
 /**
  * Highlights DeadLauncher movement, loading, and launch capture zones.
@@ -47,72 +48,8 @@ export function highlightMoves(piece, addHighlight, allPieces) {
 
   // Step 1 or 4: Normal rook movement and captures
   if (!isInLoadingMode() && !isInLaunchMode) {
-    const { moves, captures } = getRookMoves(piece, allPieces);
-    for (const move of moves) {
-      addHighlight(move.row, move.col, 0xffff00);
-    }
-    for (const capture of captures) {
-      addHighlight(capture.row, capture.col, 0xff0000);
-    }
+    highlightRookMoves(piece, addHighlight, allPieces);
   }
-}
-
-/**
- * Returns all orthogonally adjacent tiles to a given piece.
- *
- * @param {Object} piece - The piece to get adjacent tiles for.
- * @returns {Array} List of adjacent positions.
- */
-export function getAdjacentTiles(piece) {
-  const directions = [
-    { dx: 1, dy: 0 },
-    { dx: -1, dy: 0 },
-    { dx: 0, dy: 1 },
-    { dx: 0, dy: -1 }
-  ];
-
-  return directions
-    .map(({ dx, dy }) => ({ row: piece.row + dy, col: piece.col + dx }))
-    .filter(pos => pos.row >= 0 && pos.row < 8 && pos.col >= 0 && pos.col < 8);
-}
-
-/**
- * Returns all valid rook-style moves and captures for a piece.
- *
- * @param {Object} piece - The piece being evaluated.
- * @param {Array} allPieces - All current board pieces.
- * @returns {{ moves: Array, captures: Array }} List of valid moves and captures.
- */
-export function getRookMoves(piece, allPieces) {
-  const validMoves = [];
-  const validCaptures = [];
-
-  const directions = [
-    { dx: 1, dy: 0 },
-    { dx: -1, dy: 0 },
-    { dx: 0, dy: 1 },
-    { dx: 0, dy: -1 }
-  ];
-
-  for (const { dx, dy } of directions) {
-    for (let step = 1; step < 8; step++) {
-      const newRow = piece.row + dy * step;
-      const newCol = piece.col + dx * step;
-      if (newRow < 0 || newRow >= 8 || newCol < 0 || newCol >= 8) break;
-
-      const occupant = getPieceAt({ row: newRow, col: newCol }, allPieces);
-      if (!occupant) {
-        validMoves.push({ row: newRow, col: newCol });
-      } else {
-        if (occupant.color !== piece.color) {
-          validCaptures.push({ row: newRow, col: newCol });
-        }
-        break;
-      }
-    }
-  }
-
-  return { moves: validMoves, captures: validCaptures };
 }
 
 /**

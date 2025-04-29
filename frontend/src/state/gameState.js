@@ -48,14 +48,14 @@ export const [isInDominationMode, setIsInDominationMode] = createSignal(false);
 // Corrected standard chess layout
 export const [pieces, setPieces] = createSignal([
   // White Pieces (top of the board)
-  { id: 1, type: "BoulderThrower", color: "White", row: 0, col: 0, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null, isStone: false },
+  { id: 1, type: "Portal", color: "White", row: 0, col: 0, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null, isStone: false },
   { id: 2, type: "Familiar", color: "White", row: 0, col: 1, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null, isStone: false },
   { id: 3, type: "WizardTower", color: "White", row: 0, col: 2, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null, isStone: false },
   { id: 4, type: "QueenOfIllusions", color: "White", row: 0, col: 3, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null, isStone: false },
   { id: 5, type: "WizardKing", color: "White", row: 0, col: 4, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null, isStone: false },
   { id: 6, type: "WizardTower", color: "White", row: 0, col: 5, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null, isStone: false },
   { id: 7, type: "Familiar", color: "White", row: 0, col: 6, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null, isStone: false },
-  { id: 8, type: "BoulderThrower", color: "White", row: 0, col: 7, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null, isStone: false },
+  { id: 8, type: "Portal", color: "White", row: 0, col: 7, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null, isStone: false },
   { id: 9,  type: "YoungWiz", color: "White", row: 1, col: 0, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null, isStone: false },
   { id: 10, type: "YoungWiz", color: "White", row: 1, col: 1, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null, isStone: false },
   { id: 11, type: "YoungWiz", color: "White", row: 1, col: 2, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null, isStone: false },
