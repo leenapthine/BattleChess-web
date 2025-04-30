@@ -24,6 +24,8 @@ import { handleWizardTowerCapture } from './pieces/wizards/WizardTower';
 import { handleWizardKingCapture } from './pieces/wizards/WizardKing';
 import { handleFamiliarClick } from './pieces/wizards/Familiar';
 import { handlePortalClick } from './pieces/wizards/Portal';
+import { handleHowlerCapture } from './pieces/demons/Howler';
+import { handleHellPawnCapture } from './pieces/demons/Hellpawn';
 
 /**
  * Handles all game board click interactions.
@@ -127,6 +129,16 @@ export async function handleSquareClick(rowIndex, columnIndex, pixiApp) {
 
   // 11. Handle Portal click logic
   if (await handlePortalClick(rowIndex, columnIndex, pixiApp)) {
+    return;
+  }
+
+  // 12. Handle Howler click logic
+  if (await handleHowlerCapture(rowIndex, columnIndex, pixiApp)) {
+    return;
+  }
+
+  // 13. Handle HellPawn click logic
+  if (await handleHellPawnCapture(rowIndex, columnIndex, pixiApp)) {
     return;
   }
 
