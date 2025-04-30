@@ -45,7 +45,13 @@ export function highlightSwapTargets(queenOfIllusions, addHighlight, allPieces) 
   // Find all friendly Pawns and YoungWiz pieces
   const friendlyPieces = allPieces.filter(piece =>
     (piece.color === queenOfIllusions.color) &&
-    (piece.type === 'Pawn' || piece.type === 'YoungWiz')
+    (
+      piece.type === 'Pawn' ||
+      piece.type === 'NecroPawn' ||
+      piece.type === 'HellPawn' ||
+      piece.type === 'YoungWiz' ||
+      piece.type === 'PawnHopper'
+    )
   );
 
   // Highlight these friendly pieces
@@ -71,7 +77,15 @@ export function handleQueenOfIllusionsSwap(row, col, pixiApp) {
   if (!queenPiece || queenPiece.type !== 'QueenOfIllusions') return false;
 
   // Ensure the clicked piece is a friendly Pawn or YoungWiz
-  if (clickedPiece && (clickedPiece.type === 'Pawn' || clickedPiece.type === 'YoungWiz') && clickedPiece.color === queenPiece.color) {
+  if (clickedPiece && 
+    (
+      clickedPiece.type === 'Pawn' ||
+      clickedPiece.type === 'NecroPawn' ||
+      clickedPiece.type === 'HellPawn' ||
+      clickedPiece.type === 'YoungWiz' ||
+      clickedPiece.type === 'PawnHopper'
+    )
+    && clickedPiece.color === queenPiece.color) {
     // Swap the positions of the Queen of Illusions and the clicked piece
     const tempRow = queenPiece.row;
     const tempCol = queenPiece.col;

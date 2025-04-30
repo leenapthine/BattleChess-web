@@ -22,6 +22,8 @@ import * as WizardTower from '~/pixi/pieces/wizards/WizardTower';
 import * as WizardKing from '~/pixi/pieces/wizards/WizardKing';
 import * as Familiar from '~/pixi/pieces/wizards/Familiar';
 import * as Portal from '~/pixi/pieces/wizards/Portal';
+import * as Howler from '~/pixi/pieces/demons/Howler';
+import * as HellPawn from '~/pixi/pieces/demons/HellPawn';
 
 /**
  * Mapping of piece types to their associated highlight logic modules.
@@ -52,6 +54,8 @@ const pieceLogicMap = {
   WizardKing,
   Familiar,
   Portal,
+  Howler,
+  HellPawn, 
 };
 
 /**

@@ -42,7 +42,6 @@ export function handleWizardTowerCapture(row, col, pixiApp) {
   const currentPieces = pieces();
   const selectedPosition = selectedSquare();
   const wizardTowerPiece = selectedPosition ? getPieceAt(selectedPosition, currentPieces) : null;
-  const targetPiece = getPieceAt({ row, col }, currentPieces);
 
   // Ensure the selected piece is a WizardTower
   if (!wizardTowerPiece || wizardTowerPiece.type !== 'WizardTower') return false;

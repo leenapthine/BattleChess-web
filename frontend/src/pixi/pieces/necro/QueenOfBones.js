@@ -57,7 +57,13 @@ import {
     const eligiblePawns = updatedPieces.filter(
       piece =>
         piece.color === queenColor &&
-        (piece.type === 'Pawn' || piece.type === 'NecroPawn')
+        (
+          piece.type === 'Pawn' ||
+          piece.type === 'NecroPawn' ||
+          piece.type === 'HellPawn' ||
+          piece.type === 'YoungWiz' ||
+          piece.type === 'PawnHopper'
+        )
     );
   
     if (eligiblePawns.length >= 2) {
