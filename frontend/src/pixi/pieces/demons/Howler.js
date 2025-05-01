@@ -1,4 +1,5 @@
-// Description: Logic module for the Howler piece, a custom level 2 piece with dynamic movement abilities based on captured pieces.
+// Description: Logic module for the Howler piece, a custom level 2 Demons guild piece 
+// with dynamic movement abilities based on captured pieces.
 //
 // Main Functions:
 // - highlightMoves(howler, addHighlight, allPieces):
