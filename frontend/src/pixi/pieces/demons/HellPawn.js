@@ -1,4 +1,4 @@
-// Description: Logic module for the HellPawn piece, a unique pawn from the Necromancer Guild.
+// Description: Logic module for the HellPawn piece, a unique level 2 pawn from the Demons Guild.
 //
 // Main Functions:
 // - highlightMoves(hellPawn, addHighlight, allPieces):

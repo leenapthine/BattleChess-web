@@ -45,13 +45,16 @@ export const [isInBoulderMode, setIsInBoulderMode] = createSignal(false);
 export const [isInDominationMode, setIsInDominationMode] = createSignal(false);
 // True if QueenOfDomination has activated its ability to dominate a piece.
 
+export const [isSecondMove, setIsSecondMove] = createSignal(false);
+// True if the Prowler has captured an enemy piece and is now moving again.
+
 // Corrected standard chess layout
 export const [pieces, setPieces] = createSignal([
   // White Pieces (top of the board)
   { id: 1, type: "Portal", color: "White", row: 0, col: 0, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null, isStone: false, 
     gainedAbilities: { knight: false, rook: false, queen: false, pawn: false }, 
   },
-  { id: 2, type: "Familiar", color: "White", row: 0, col: 1, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null, isStone: false,
+  { id: 2, type: "Prowler", color: "White", row: 0, col: 1, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null, isStone: false,
     gainedAbilities: { knight: false, rook: false, queen: false, pawn: false },
   },
   { id: 3, type: "Howler", color: "White", row: 0, col: 2, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null, isStone: false,
@@ -66,7 +69,7 @@ export const [pieces, setPieces] = createSignal([
   { id: 6, type: "Howler", color: "White", row: 0, col: 5, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null, isStone: false,
     gainedAbilities: { knight: false, rook: false, queen: false, pawn: false },
   },
-  { id: 7, type: "Familiar", color: "White", row: 0, col: 6, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null, isStone: false,
+  { id: 7, type: "Prowler", color: "White", row: 0, col: 6, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null, isStone: false,
     gainedAbilities: { knight: false, rook: false, queen: false, pawn: false },
   },
   { id: 8, type: "Portal", color: "White", row: 0, col: 7, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null, isStone: false,

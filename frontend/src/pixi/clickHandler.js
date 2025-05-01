@@ -26,6 +26,7 @@ import { handleFamiliarClick } from './pieces/wizards/Familiar';
 import { handlePortalClick } from './pieces/wizards/Portal';
 import { handleHowlerCapture } from './pieces/demons/Howler';
 import { handleHellPawnCapture } from './pieces/demons/Hellpawn';
+import { handleProwlerCapture } from './pieces/demons/Prowler';
 
 /**
  * Handles all game board click interactions.
@@ -141,6 +142,12 @@ export async function handleSquareClick(rowIndex, columnIndex, pixiApp) {
   if (await handleHellPawnCapture(rowIndex, columnIndex, pixiApp)) {
     return;
   }
+
+  // 14. Handle Prowler click logic
+  if (await handleProwlerCapture(rowIndex, columnIndex, pixiApp)) {
+    return;
+  }
+
 
   // === 4. Move currently selected piece to highlighted square
   if (isClickedHighlighted && currentSelection) {
