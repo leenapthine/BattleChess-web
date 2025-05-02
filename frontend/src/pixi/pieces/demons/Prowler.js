@@ -24,13 +24,13 @@ import { getPieceAt } from '~/pixi/utils';
 import { drawBoard } from '../../drawBoard';
 import { handleSquareClick } from '../../clickHandler';
 import {
-    pieces,
-    selectedSquare,
-    setSelectedSquare,
-    setPieces,
-    setHighlights,
-    isSecondMove,
-    setIsSecondMove,
+  pieces,
+  selectedSquare,
+  setSelectedSquare,
+  setPieces,
+  setHighlights,
+  isSecondMove,
+  setIsSecondMove,
 } from '~/state/gameState';
 import { handleCapture } from '../../logic/handleCapture';
 
@@ -73,31 +73,31 @@ export async function handleProwlerCapture(row, col, pixiApp) {
 
   // Check if the target piece is an enemy piece
   if (targetPiece && targetPiece.color !== prowlerPiece.color) {
-      let updatedPieces = handleCapture(targetPiece, currentPieces);
+    let updatedPieces = handleCapture(targetPiece, currentPieces);
 
-      // Move the Prowler to the captured piece's square
-      prowlerPiece.row = row;
-      prowlerPiece.col = col;
+    // Move the Prowler to the captured piece's square
+    prowlerPiece.row = row;
+    prowlerPiece.col = col;
 
-      // Update the pieces with the new position for the Prowler
-      updatedPieces = updatedPieces.filter(piece => piece.id !== prowlerPiece.id);  // Remove old Prowler
-      updatedPieces.push(prowlerPiece);  // Add the updated Prowler at the new position
+    // Update the pieces with the new position for the Prowler
+    updatedPieces = updatedPieces.filter(piece => piece.id !== prowlerPiece.id);  // Remove old Prowler
+    updatedPieces.push(prowlerPiece);  // Add the updated Prowler at the new position
 
-      setPieces(updatedPieces);
-      setSelectedSquare({ row, col });
-      setHighlights([]);
-      setIsSecondMove(true);
+    setPieces(updatedPieces);
+    setSelectedSquare({ row, col });
+    setHighlights([]);
+    setIsSecondMove(true);
 
-      // Now highlight the second move for the Prowler
-      const highlightList = [];
-      highlightStandardKnightMoves(prowlerPiece, (highlightRow, highlightCol, color) => {
-          highlightList.push({ row: highlightRow, col: highlightCol, color });
-      }, updatedPieces);
+    // Now highlight the second move for the Prowler
+    const highlightList = [];
+    highlightStandardKnightMoves(prowlerPiece, (highlightRow, highlightCol, color) => {
+        highlightList.push({ row: highlightRow, col: highlightCol, color });
+    }, updatedPieces);
 
-      setHighlights(highlightList);
-      drawBoard(pixiApp, handleSquareClick);
+    setHighlights(highlightList);
+    drawBoard(pixiApp, handleSquareClick);
 
-      return true;
+    return true;
   }
 
   return false;

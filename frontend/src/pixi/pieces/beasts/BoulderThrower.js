@@ -92,7 +92,6 @@ export function highlightCaptureZones(boulderThrower, addHighlight, allPieces) {
  */
 export async function handleBoulderThrowerClick(row, col, pixiApp) {
   const currentPieces = pieces();
-  const clickedPiece = getPieceAt({ row, col }, currentPieces);
   const currentSelection = selectedSquare();
   const selectedPiece = currentSelection ? getPieceAt(currentSelection, currentPieces) : null;
 
@@ -118,7 +117,8 @@ export async function handleBoulderThrowerClick(row, col, pixiApp) {
     selectedPiece &&
     selectedPiece.row === row &&
     selectedPiece.col === col &&
-    selectedPiece.type === 'BoulderThrower'
+    selectedPiece.type === 'BoulderThrower' &&
+    !isInBoulderMode()
   ) {
     const launchTargets = [];
     highlightCaptureZones(selectedPiece, (highlightRow, highlightCol, color) => {
@@ -132,23 +132,10 @@ export async function handleBoulderThrowerClick(row, col, pixiApp) {
     return true;
   }
 
-  // === Step 3: Initial selection of BoulderThrower
-  if (clickedPiece && clickedPiece.type === 'BoulderThrower') {
-    setIsInBoulderMode(false);
-    setSelectedSquare({ row, col });
-
-    const moveTargets = [];
-    highlightMoves(clickedPiece, (highlightRow, highlightCol, color) => {
-      moveTargets.push({ row: highlightRow, col: highlightCol, color });
-    }, currentPieces);
-
-    moveTargets.push({ row, col, color: 0x00ffff });
-    setHighlights(moveTargets);
-    await drawBoard(pixiApp, handleSquareClick);
-    return true;
-  }
-
   // === Step 4: Clicked elsewhere — deselect
-  setIsInBoulderMode(false);
+  if (selectedPiece && selectedPiece.type === 'BoulderThrower') {
+    setIsInBoulderMode(false);
+  }
+  
   return false;
 }

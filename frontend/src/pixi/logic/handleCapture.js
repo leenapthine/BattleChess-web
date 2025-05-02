@@ -1,5 +1,4 @@
 import { triggerResurrectionPrompt } from '~/pixi/logic/handleResurrectionClick';
-import { setHighlights } from '../../state/gameState';
 
 /**
  * Handles removal of a captured piece and triggers post-capture logic (e.g. QueenOfBones revive).
