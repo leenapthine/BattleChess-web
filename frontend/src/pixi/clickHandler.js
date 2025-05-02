@@ -165,7 +165,7 @@ export async function handleSquareClick(rowIndex, columnIndex, pixiApp) {
   if (isClickedHighlighted && currentSelection) {
     const moveSuccessful = await handlePieceMove(
       { row: rowIndex, col: columnIndex },
-      pixiApp
+      pixiApp,
     );
     if (moveSuccessful) return;
   }

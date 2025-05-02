@@ -1,4 +1,5 @@
 import { getPieceAt, isOpponentPiece } from '~/pixi/utils';
+import { currentTurn } from '~/state/gameState';
 
 /**
  * Adds highlight markers for all valid Rook moves.
@@ -10,6 +11,12 @@ import { getPieceAt, isOpponentPiece } from '~/pixi/utils';
  */
 export function highlightMoves(piece, addHighlight, allPieces) {
   const { row, col, color } = piece;
+
+  // Get current turn directly from the signal
+  const isOpponentTurn = color !== currentTurn(); // Check if it's the opponent's turn
+
+  // Determine the highlight color based on the turn
+  const highlightColor = isOpponentTurn ? 0xe5e4e2 : 0xffff00;
 
   const directions = [
     { rowOffset: -1, colOffset: 0 },  // up
@@ -30,12 +37,14 @@ export function highlightMoves(piece, addHighlight, allPieces) {
 
       if (targetPiece) {
         if (isOpponentPiece(targetPos, color, allPieces)) {
-          addHighlight(targetRow, targetCol, 0xff0000); // red for capture
+          // Highlight the capture squares (red for opponent pieces)
+          addHighlight(targetRow, targetCol, highlightColor); // grey for opponent's turn, red for valid capture
         }
-        break;
+        break; // stop path after hitting any piece
       }
 
-      addHighlight(targetRow, targetCol, 0xffff00); // yellow for valid move
+      // Highlight valid move squares (yellow for the current player's turn, grey for opponent's turn)
+      addHighlight(targetRow, targetCol, highlightColor);
     }
   }
 }

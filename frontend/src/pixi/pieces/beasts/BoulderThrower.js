@@ -37,6 +37,10 @@ import { handleCapture } from '~/pixi/logic/handleCapture';
  */
 export function highlightMoves(boulderThrower, addHighlight, allPieces) {
   const { row: originRow, col: originCol } = boulderThrower;
+
+  // highlight self in cyan
+  addHighlight(row, col, 0x00ffff);
+
   const directions = [
     { deltaRow: 1, deltaCol: 0 },
     { deltaRow: -1, deltaCol: 0 },

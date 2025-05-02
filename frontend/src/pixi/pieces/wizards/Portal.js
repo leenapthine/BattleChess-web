@@ -43,8 +43,16 @@ import { clearBoardState } from '~/pixi/logic/clearBoardState';
 export function highlightMoves(portal, addHighlight, allPieces) {
   const isInEjectMode = launchMode()?.id === portal.id;
 
+  const row = portal.row;
+	const col = portal.col;
+  
+  if (!isInLoadingMode() && !isInEjectMode) {
+    addHighlight(row, col, 0x00ffff); // Highlight portal in cyan
+  }
+
   // Step 2: Loading mode
   if (isInLoadingMode() && !portal.pieceLoaded) {
+    addHighlight(row, col, 0xffff00);
     const adjacentTiles = getAdjacentTiles(portal);
     for (const tile of adjacentTiles) {
       addHighlight(tile.row, tile.col, 0x00ffff);
@@ -54,6 +62,7 @@ export function highlightMoves(portal, addHighlight, allPieces) {
 
   // Step 3: Eject mode
   if (isInEjectMode && portal.pieceLoaded) {
+    addHighlight(row, col, 0xffff00);
     const adjacentTiles = getAdjacentTiles(portal);
     for (const tile of adjacentTiles) {
       addHighlight(tile.row, tile.col, 0x00ffff);

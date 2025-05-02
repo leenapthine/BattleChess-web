@@ -1,4 +1,5 @@
 import { getPieceAt, isOpponentPiece } from '~/pixi/utils';
+import { currentTurn } from '~/state/gameState';
 
 /**
  * Adds highlight markers for all valid Knight moves.
@@ -11,6 +12,9 @@ import { getPieceAt, isOpponentPiece } from '~/pixi/utils';
  */
 export function highlightMoves(piece, addHighlight, allPieces) {
   const { row, col, color } = piece;
+
+  // Get current turn directly from the signal
+  const isOpponentTurn = color !== currentTurn();
 
   const knightMoves = [
     { rowOffset: -2, colOffset: -1 },
@@ -33,9 +37,9 @@ export function highlightMoves(piece, addHighlight, allPieces) {
     const targetPiece = getPieceAt(targetPos, allPieces);
 
     if (!targetPiece) {
-      addHighlight(targetRow, targetCol, 0xffff00); // yellow for movement
+      addHighlight(targetRow, targetCol, isOpponentTurn ? 0xe5e4e2 : 0xffff00); // yellow for movement
     } else if (isOpponentPiece(targetPos, color, allPieces)) {
-      addHighlight(targetRow, targetCol, 0xff0000); // red for capture
+      addHighlight(targetRow, targetCol, isOpponentTurn ? 0xe5e4e2 : 0xff0000); // red for capture
     }
   }
 }

@@ -16,7 +16,7 @@ import { highlightMoves as highlightStandardKingMoves } from '~/pixi/pieces/basi
 import { getPieceAt } from '~/pixi/utils';
 import { drawBoard } from '../../drawBoard';
 import { handleSquareClick } from '../../clickHandler';
-import { pieces, selectedSquare, setSelectedSquare, setPieces, setHighlights } from '~/state/gameState';
+import { pieces, selectedSquare, currentTurn, setSelectedSquare, setPieces, setHighlights } from '~/state/gameState';
 import { handleCapture } from '../../logic/handleCapture';
 
 /**
@@ -47,6 +47,9 @@ function highlightVerticalCapture(wizardKing, addHighlight, allPieces) {
   const directionUp = -1; // Upward direction
   const directionDown = 1; // Downward direction
   const column = wizardKing.col;
+
+  // Get current turn directly from the signal
+  const isOpponentTurn = wizardKing.color !== currentTurn();
   
   // Check vertical line upwards
   let currentRow = wizardKing.row + directionUp;
@@ -54,7 +57,7 @@ function highlightVerticalCapture(wizardKing, addHighlight, allPieces) {
     const pieceAtPos = getPieceAt({ row: currentRow, col: column }, allPieces);
     if (pieceAtPos) {
       if (pieceAtPos.color !== wizardKing.color) {
-        addHighlight(currentRow, column, 0xff0000); // Highlight the first enemy piece in the column (upward)
+        addHighlight(currentRow, column, isOpponentTurn ? 0xe5e4e2 : 0xff0000); // Highlight the first enemy piece in the column (upward)
       }
       break; // Stop at the first piece (no shooting through pieces)
     }
@@ -67,7 +70,7 @@ function highlightVerticalCapture(wizardKing, addHighlight, allPieces) {
     const pieceAtPos = getPieceAt({ row: currentRow, col: column }, allPieces);
     if (pieceAtPos) {
       if (pieceAtPos.color !== wizardKing.color) {
-        addHighlight(currentRow, column, 0xff0000); // Highlight the first enemy piece in the column (downward)
+        addHighlight(currentRow, column, isOpponentTurn ? 0xe5e4e2 : 0xff0000); // Highlight the first enemy piece in the column (downward)
       }
       break; // Stop at the first piece (no shooting through pieces)
     }

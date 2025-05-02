@@ -15,7 +15,6 @@ import { applyStunEffect } from '~/pixi/pieces/necro/GhostKnight';
 import { handlePawnHopperPostMove } from '~/pixi/pieces/beasts/PawnHopper';
 import { returnOriginalSprite } from '~/pixi/pieces/beasts/QueenOfDomination';
 import { handleCapture } from '~/pixi/logic/handleCapture';
-import { clearBoardState } from './clearBoardState';
 
 /**
  * Handles the movement of the currently selected piece to a destination square.

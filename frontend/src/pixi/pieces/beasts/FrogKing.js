@@ -18,6 +18,7 @@
 
 import { getPieceAt } from '~/pixi/utils';
 import { highlightMoves as highlightKingMoves } from '~/pixi/pieces/basic/King';
+import { currentTurn } from '~/state/gameState';
 
 /**
  * Highlights all valid movement and capture tiles for the FrogKing.
@@ -28,32 +29,37 @@ import { highlightMoves as highlightKingMoves } from '~/pixi/pieces/basic/King';
  * @param {Array} allPieces - All current game pieces on the board.
  */
 export function highlightMoves(frogKing, addHighlight, allPieces) {
-    // Step 1: Normal King movement
-    highlightKingMoves(frogKing, addHighlight, allPieces);
-  
-    // Step 2: Add 2-tile orthogonal hops
-    const hopOffsets = [
-      { rowOffset: 2, colOffset: 0 },
-      { rowOffset: -2, colOffset: 0 },
-      { rowOffset: 0, colOffset: 2 },
-      { rowOffset: 0, colOffset: -2 }
-    ];
-  
-    for (const { rowOffset, colOffset } of hopOffsets) {
-      const targetRow = frogKing.row + rowOffset;
-      const targetCol = frogKing.col + colOffset;
-  
-      // Stay within bounds
-      if (targetRow < 0 || targetRow >= 8 || targetCol < 0 || targetCol >= 8) continue;
-  
-      const targetPiece = getPieceAt({ row: targetRow, col: targetCol }, allPieces);
-  
-      // Skip if occupied by a friendly piece
-      if (targetPiece && targetPiece.color === frogKing.color) continue;
-  
-      // Highlight enemy targets in red, empty squares default color
-      const color = targetPiece ? 0xff0000 : undefined;
-      addHighlight(targetRow, targetCol, color);
-    }
+  // Step 1: Normal King movement (highlight like a standard King)
+  highlightKingMoves(frogKing, addHighlight, allPieces);
+
+  // Get current turn directly from the signal
+  const isOpponentTurn = frogKing.color !== currentTurn();
+
+  // Step 2: Add 2-tile orthogonal hops (move two squares in any direction)
+  const hopOffsets = [
+    { rowOffset: 2, colOffset: 0 },
+    { rowOffset: -2, colOffset: 0 },
+    { rowOffset: 0, colOffset: 2 },
+    { rowOffset: 0, colOffset: -2 }
+  ];
+
+  for (const { rowOffset, colOffset } of hopOffsets) {
+    const targetRow = frogKing.row + rowOffset;
+    const targetCol = frogKing.col + colOffset;
+
+    // Stay within bounds
+    if (targetRow < 0 || targetRow >= 8 || targetCol < 0 || targetCol >= 8) continue;
+
+    const targetPiece = getPieceAt({ row: targetRow, col: targetCol }, allPieces);
+
+    // Skip if occupied by a friendly piece
+    if (targetPiece && targetPiece.color === frogKing.color) continue;
+
+    // Determine the color for highlighting:
+    // - Red if it is an enemy piece
+    // - Grey if it is the opponent's turn
+    const highlightColor = isOpponentTurn ? 0xd3d3d3 : (targetPiece ? 0xff0000 : 0xffff00);
+
+    addHighlight(targetRow, targetCol, highlightColor);
   }
-  
+}

@@ -15,6 +15,7 @@
 
 import { highlightMoves as highlightStandardPawnMoves } from '~/pixi/pieces/basic/Pawn';
 import { getPieceAt } from '~/pixi/utils';
+import { currentTurn } from '~/state/gameState';
 
 /**
  * Highlights all valid moves for a PawnHopper piece.
@@ -33,13 +34,18 @@ export function highlightMoves(pawnHopper, addHighlight, allPieces) {
   // Inherit single-step and diagonal capture logic from standard Pawn
   highlightStandardPawnMoves(pawnHopper, addHighlight, allPieces);
 
+  // Get current turn directly from the signal
+  const isOpponentTurn = pawnHopper.color !== currentTurn();
+
   // Add highlight for 2-step forward movement (hop capture)
   const squareAhead = getPieceAt({ row: oneStepRow, col: column }, allPieces);
   const squareTwoAhead = getPieceAt({ row: twoStepRow, col: column }, allPieces);
 
   if (!squareTwoAhead) {
     const isHopCapture = squareAhead && squareAhead.color !== pawnHopper.color;
-    const highlightColor = isHopCapture ? 0xff0000 : undefined;
+    const highlightColor = isOpponentTurn 
+    ? (isHopCapture ? 0xe5e4e2 : 0xd3d3d3) // Grey if opponent's turn, otherwise yellow
+    : (isHopCapture ? 0xff0000 : 0xffff00);
     addHighlight(twoStepRow, column, highlightColor);
   }
 }

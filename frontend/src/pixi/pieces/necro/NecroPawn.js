@@ -22,9 +22,8 @@
 // - Integrated with the global `clickHandler`, `highlight` system, and board state management.
 // - A powerful tactical unit capable of punishing dense clusters of enemies — or misused, friendly fire.
 
-
-import { getPieceAt } from '~/pixi/utils';
-import { setSacrificeMode, sacrificeMode, setHighlights, setPieces } from '~/state/gameState';
+import { highlightMoves as hightlightStandardPawnMoves } from '../basic/Pawn';
+import { setSacrificeMode, sacrificeMode, setHighlights, setPieces, currentTurn } from '~/state/gameState';
 import { handleCapture } from '~/pixi/logic/handleCapture';
 
 
@@ -42,53 +41,29 @@ import { handleCapture } from '~/pixi/logic/handleCapture';
  * @param {Array} allPieces - Array of all current pieces on the board.
  */
 export function highlightMoves(piece, addHighlight, allPieces) {
-	const forward = piece.color === 'White' ? 1 : -1;
-	const row = piece.row;
-	const col = piece.col;
+	// Highlight standard pawn moves
+	hightlightStandardPawnMoves(piece, addHighlight, allPieces);
+
+	// Get current turn directly from the signal
+	const isOpponentTurn = piece.color !== currentTurn(); // Check if it's the opponent's turn
+
+	// Determine the highlight color based on the turn
+	const highlightColor = isOpponentTurn ? 0xe5e4e2 : 0xffff00;
 
 	const inSacrificeMode = sacrificeMode()?.id === piece.id;
 
 	// Highlight self: blue (initial), red (if in sacrifice mode)
-	addHighlight(row, col, inSacrificeMode ? 0xff0000 : 0x00ffff);
+	addHighlight(piece.row, piece.col, inSacrificeMode ? 0xff0000 : 0x00ffff);
 
 	// AoE preview if in sacrifice mode
 	if (inSacrificeMode) {
 		console.log("in sacrifice mode");
-		getSurroundingTiles(row, col).forEach(({ row: r, col: c }) => {
+		getSurroundingTiles(piece.row, piece.col).forEach(({ row: r, col: c }) => {
 			if (r >= 0 && r < 8 && c >= 0 && c < 8) {
-				addHighlight(r, c, 0xff0000);
+				addHighlight(r, c, highlightColor);
 			}
 		});
 		return;
-	}
-
-	// Normal movement
-	const singleStep = { row: row + forward, col };
-	if (!getPieceAt(singleStep, allPieces)) {
-		addHighlight(singleStep.row, singleStep.col);
-	}
-
-	const startRow = piece.color === 'White' ? 1 : 6;
-	const doubleStep = { row: row + 2 * forward, col };
-	if (
-		row === startRow &&
-		!getPieceAt(singleStep, allPieces) &&
-		!getPieceAt(doubleStep, allPieces)
-	) {
-		addHighlight(doubleStep.row, doubleStep.col);
-	}
-
-	for (const offset of [-1, 1]) {
-		const target = { row: row + forward, col: col + offset };
-		if (
-			target.row >= 0 && target.row < 8 &&
-			target.col >= 0 && target.col < 8
-		) {
-			const targetPiece = getPieceAt(target, allPieces);
-			if (targetPiece && targetPiece.color !== piece.color) {
-				addHighlight(target.row, target.col, 0xff0000);
-			}
-		}
 	}
 }
   

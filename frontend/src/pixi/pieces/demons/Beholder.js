@@ -28,6 +28,7 @@ import {
   setHighlights,
   isInBoulderMode,
   setIsInBoulderMode,
+  currentTurn,
 } from '~/state/gameState';
 import { handleCapture } from '../../logic/handleCapture';
 
@@ -41,6 +42,15 @@ import { handleCapture } from '../../logic/handleCapture';
  */
 export function highlightMoves(beholder, addHighlight, allPieces) {
   const { row, col, color } = beholder;
+  
+  // highlight self in cyan
+  addHighlight(row, col, 0x00ffff);
+
+  // Get current turn directly from the signal
+  const isOpponentTurn = color !== currentTurn(); // Check if it's the opponent's turn
+
+  // Determine the highlight color based on the turn
+  const highlightColor = isOpponentTurn ? 0xe5e4e2 : 0xffff00;
 
   const directions = [
     { rowOffset: -1, colOffset: 0 },  // up
@@ -60,7 +70,7 @@ export function highlightMoves(beholder, addHighlight, allPieces) {
     const targetPiece = getPieceAt(targetPos, allPieces);
 
     if (!targetPiece) {
-      addHighlight(targetRow, targetCol, 0xffff00); // yellow for valid move
+      addHighlight(targetRow, targetCol, highlightColor); // yellow for valid move
     }
   }
 }
@@ -129,12 +139,17 @@ export async function handleBeholderClick(row, col, pixiApp) {
     selectedPiece.type === 'Beholder' &&
     !isInBoulderMode()
   ) {
+    // Get current turn directly from the signal
+    const isOpponentTurn = selectedPiece.color !== currentTurn(); // Check if it's the opponent's turn
+
+    // Determine the highlight color based on the turn
+    const highlightColor = isOpponentTurn ? 0xe5e4e2 : 0xff0000;
+
     const launchTargets = [];
-    highlightCaptureZones(selectedPiece, (highlightRow, highlightCol, color) => {
-      launchTargets.push({ row: highlightRow, col: highlightCol, color });
+    highlightCaptureZones(selectedPiece, (highlightRow, highlightCol) => {
+      launchTargets.push({ row: highlightRow, col: highlightCol, color: highlightColor});
     }, currentPieces);
 
-    launchTargets.push({ row, col, color: 0x00ffff });
     setHighlights(launchTargets);
     setIsInBoulderMode(true);
     await drawBoard(pixiApp, handleSquareClick);

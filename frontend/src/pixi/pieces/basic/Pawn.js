@@ -1,4 +1,5 @@
 import { getPieceAt, isOpponentPiece } from '~/pixi/utils';
+import { currentTurn } from '~/state/gameState';
 
 /**
  * Highlight all valid moves for a Pawn.
@@ -11,15 +12,21 @@ export function highlightMoves(piece, addHighlight, allPieces) {
   const direction = color === 'White' ? 1 : -1;
   const startRow = color === 'White' ? 1 : 6;
 
+  // Get current turn directly from the signal
+  const isOpponentTurn = color !== currentTurn(); // Check if it's the opponent's turn
+
+  // Determine the highlight color based on the turn
+  const highlightColor = isOpponentTurn ? 0xe5e4e2 : 0xffff00;
+
   // One step forward
   const forward1 = { row: row + direction, col };
   if (!getPieceAt(forward1, allPieces)) {
-    addHighlight(forward1.row, forward1.col, 0xffff00);
+    addHighlight(forward1.row, forward1.col, highlightColor);
 
     // Two steps forward if at starting row
     const forward2 = { row: row + 2 * direction, col };
     if (row === startRow && !getPieceAt(forward2, allPieces)) {
-      addHighlight(forward2.row, forward2.col, 0xffff00);
+      addHighlight(forward2.row, forward2.col, highlightColor);
     }
   }
 
@@ -27,7 +34,7 @@ export function highlightMoves(piece, addHighlight, allPieces) {
   for (const dc of [-1, 1]) {
     const diag = { row: row + direction, col: col + dc };
     if (isOpponentPiece(diag, color, allPieces)) {
-      addHighlight(diag.row, diag.col, 0xff0000);
+      addHighlight(diag.row, diag.col, highlightColor);
     }
   }
 }
