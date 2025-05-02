@@ -7,6 +7,7 @@ import { handleSquareClick } from '~/pixi/clickHandler';
  * Top-level component that initializes and renders the PixiJS chessboard.
  * Mounts the PixiJS application and triggers the initial board draw.
  */
+
 export default function Board() {
   let containerElement;
 

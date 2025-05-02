@@ -1,4 +1,5 @@
 import { triggerResurrectionPrompt } from '~/pixi/logic/handleResurrectionClick';
+import { triggerDetonate } from '~/pixi/pieces/demons/QueenOfDestruction';
 
 /**
  * Handles removal of a captured piece and triggers post-capture logic (e.g. QueenOfBones revive).
@@ -17,7 +18,10 @@ export function handleCapture(capturedPiece, currentPieces, capturingPiece = nul
     return currentPieces; // Do not capture the piece
   }
 
-  const updatedPieces = currentPieces.filter(p => p.id !== capturedPiece.id);
+  // Triggger detonation effect if applicable
+  const filteredPieces = triggerDetonate(capturedPiece.row, capturedPiece.col, currentPieces);
+
+  const updatedPieces = filteredPieces.filter(p => p.id !== capturedPiece.id);
 
   // Trigger resurrection effect if applicable
   triggerResurrectionPrompt(capturingPiece, capturedPiece, { row: capturedPiece.row, col: capturedPiece.col }, updatedPieces);

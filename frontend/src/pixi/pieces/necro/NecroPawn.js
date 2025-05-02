@@ -118,7 +118,7 @@ export function performNecroPawnSacrifice(necroPawn, allPieces) {
 	// Also remove the necroPawn itself
   updatedPieces = updatedPieces.filter(p => p.id !== necroPawn.id);
 
-	setPieces(updatedPieces);
+  setPieces(updatedPieces);
   setHighlights([]);
   setSacrificeMode(null);
 }
@@ -130,7 +130,7 @@ export function performNecroPawnSacrifice(necroPawn, allPieces) {
  * @param {number} col - Column index of the center tile.
  * @returns {Array<{row: number, col: number}>}
  */
-function getSurroundingTiles(row, col) {
+export function getSurroundingTiles(row, col) {
   return [
     { row: row - 1, col: col - 1 },
     { row: row - 1, col: col },
