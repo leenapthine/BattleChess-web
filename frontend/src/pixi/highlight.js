@@ -26,6 +26,7 @@ import * as Howler from '~/pixi/pieces/demons/Howler';
 import * as HellPawn from '~/pixi/pieces/demons/HellPawn';
 import * as Prowler from '~/pixi/pieces/demons/Prowler';
 import * as Beholder from '~/pixi/pieces/demons/Beholder';
+import * as HellKing from '~/pixi/pieces/demons/HellKing';
 
 /**
  * Mapping of piece types to their associated highlight logic modules.
@@ -60,6 +61,7 @@ const pieceLogicMap = {
   HellPawn,
   Prowler,
   Beholder,
+  HellKing,
 };
 
 /**

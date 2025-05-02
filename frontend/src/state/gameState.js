@@ -63,7 +63,7 @@ export const [pieces, setPieces] = createSignal([
   { id: 4, type: "QueenOfIllusions", color: "White", row: 0, col: 3, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null, isStone: false,
     gainedAbilities: { knight: false, rook: false, queen: false, pawn: false },
    },
-  { id: 5, type: "WizardKing", color: "White", row: 0, col: 4, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null, isStone: false,
+  { id: 5, type: "HellKing", color: "White", row: 0, col: 4, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null, isStone: false,
     gainedAbilities: { knight: false, rook: false, queen: false, pawn: false },
   },
   { id: 6, type: "Howler", color: "White", row: 0, col: 5, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null, isStone: false,
