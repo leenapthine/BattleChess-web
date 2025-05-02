@@ -27,6 +27,7 @@ import { handlePortalClick } from './pieces/wizards/Portal';
 import { handleHowlerCapture } from './pieces/demons/Howler';
 import { handleHellPawnCapture } from './pieces/demons/Hellpawn';
 import { handleProwlerCapture } from './pieces/demons/Prowler';
+import { handleBeholderClick } from './pieces/demons/Beholder';
 
 /**
  * Handles all game board click interactions.
@@ -145,6 +146,11 @@ export async function handleSquareClick(rowIndex, columnIndex, pixiApp) {
 
   // 14. Handle Prowler click logic
   if (await handleProwlerCapture(rowIndex, columnIndex, pixiApp)) {
+    return;
+  }
+
+  // 15. Handle Beholder click logic
+  if (await handleBeholderClick(rowIndex, columnIndex, pixiApp)) {
     return;
   }
 

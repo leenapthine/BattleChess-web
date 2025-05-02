@@ -51,7 +51,7 @@ export const [isSecondMove, setIsSecondMove] = createSignal(false);
 // Corrected standard chess layout
 export const [pieces, setPieces] = createSignal([
   // White Pieces (top of the board)
-  { id: 1, type: "Portal", color: "White", row: 0, col: 0, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null, isStone: false, 
+  { id: 1, type: "Beholder", color: "White", row: 0, col: 0, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null, isStone: false, 
     gainedAbilities: { knight: false, rook: false, queen: false, pawn: false }, 
   },
   { id: 2, type: "Prowler", color: "White", row: 0, col: 1, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null, isStone: false,
@@ -72,7 +72,7 @@ export const [pieces, setPieces] = createSignal([
   { id: 7, type: "Prowler", color: "White", row: 0, col: 6, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null, isStone: false,
     gainedAbilities: { knight: false, rook: false, queen: false, pawn: false },
   },
-  { id: 8, type: "Portal", color: "White", row: 0, col: 7, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null, isStone: false,
+  { id: 8, type: "BoulderThrower", color: "White", row: 0, col: 7, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null, isStone: false,
     gainedAbilities: { knight: false, rook: false, queen: false, pawn: false },
   },
   { id: 9,  type: "HellPawn", color: "White", row: 1, col: 0, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null, isStone: false,
