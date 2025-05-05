@@ -7,8 +7,9 @@ import {
 	setSacrificeArmed,
 	setLaunchMode,
 	setIsInDominationMode,
+	setIsInBoulderMode,
+	setIsInLoadingMode,
 } from '~/state/gameState';
-import { setIsInLoadingMode } from '../../state/gameState';
 
 /**
  * Clears all board UI state and redraws.
@@ -22,6 +23,7 @@ export async function clearBoardState({ preserveLaunch = false } = {}) {
 	setSacrificeArmed(false);
 	setIsInLoadingMode(false);
 	setIsInDominationMode(false);
+	setIsInBoulderMode(false);
 
 	if (!preserveLaunch) {
 		setLaunchMode(null);

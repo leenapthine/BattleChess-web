@@ -43,8 +43,16 @@ import { clearBoardState } from '~/pixi/logic/clearBoardState';
 export function highlightMoves(portal, addHighlight, allPieces) {
   const isInEjectMode = launchMode()?.id === portal.id;
 
+  const row = portal.row;
+	const col = portal.col;
+  
+  if (!isInLoadingMode() && !isInEjectMode) {
+    addHighlight(row, col, 0x00ffff);
+  }
+
   // Step 2: Loading mode
   if (isInLoadingMode() && !portal.pieceLoaded) {
+    addHighlight(row, col, 0xffff00);
     const adjacentTiles = getAdjacentTiles(portal);
     for (const tile of adjacentTiles) {
       addHighlight(tile.row, tile.col, 0x00ffff);
@@ -54,6 +62,7 @@ export function highlightMoves(portal, addHighlight, allPieces) {
 
   // Step 3: Eject mode
   if (isInEjectMode && portal.pieceLoaded) {
+    addHighlight(row, col, 0xffff00);
     const adjacentTiles = getAdjacentTiles(portal);
     for (const tile of adjacentTiles) {
       addHighlight(tile.row, tile.col, 0x00ffff);
@@ -74,14 +83,14 @@ export function highlightMoves(portal, addHighlight, allPieces) {
  * @param {Object} columnIndex - Column of the clicked square.
  * @param {Object} pixiApp - PixiJS application instance.
  */
-export async function handlePortalClick(rowIndex, columnIndex, pixiApp) {
+export async function handlePortalClick(rowIndex, columnIndex, pixiApp, isTurn) {
   const allPieces = pieces();
   const clickedPiece = getPieceAt({ row: rowIndex, col: columnIndex }, allPieces);
   const selectedPosition = selectedSquare();
-  const loadedPortal = launchMode();  // Get the portal in launch mode (if any)
+  const loadedPortal = launchMode();
 
   // Step 5: Eject at valid target
-  if (loadedPortal) {
+  if (loadedPortal && isTurn) {
     const isSquareValid = getAdjacentTiles(loadedPortal);
     const isTargetUnoccupied = !getPieceAt({ row: rowIndex, col: columnIndex }, allPieces);
 
@@ -109,7 +118,7 @@ export async function handlePortalClick(rowIndex, columnIndex, pixiApp) {
       setHighlights([]);
       await drawBoard(pixiApp, handleSquareClick);
 
-      return true;  // Successfully ejected the piece
+      return true;
     } else {
       clearBoardState();
     }
@@ -163,7 +172,8 @@ export async function handlePortalClick(rowIndex, columnIndex, pixiApp) {
   if (
     selectedPosition &&
     !launchMode() &&
-    getPieceAt(selectedPosition, allPieces)?.type === "Portal"
+    getPieceAt(selectedPosition, allPieces)?.type === "Portal" &&
+    isTurn
   ) {
     const launcherPiece = getPieceAt(selectedPosition, allPieces);
     if (!launcherPiece || !isInLoadingMode()) return false;

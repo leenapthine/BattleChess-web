@@ -1,4 +1,5 @@
 import { getPieceAt, isOpponentPiece } from '~/pixi/utils';
+import { currentTurn } from '~/state/gameState';
 
 /**
  * Highlight valid King moves (1 square in any direction).
@@ -8,6 +9,9 @@ import { getPieceAt, isOpponentPiece } from '~/pixi/utils';
  */
 export function highlightMoves(piece, addHighlight, allPieces) {
   const { row, col, color } = piece;
+
+  // Get current turn directly from the signal
+  const isOpponentTurn = color !== currentTurn();
 
   // All 8 adjacent directions
   const directions = [
@@ -30,9 +34,9 @@ export function highlightMoves(piece, addHighlight, allPieces) {
       const pieceAtTarget = getPieceAt(target, allPieces);
 
       if (!pieceAtTarget) {
-        addHighlight(targetRow, targetCol, 0xffff00); // Move
+        addHighlight(targetRow, targetCol, isOpponentTurn ? 0xe5e4e2 : 0xffff00); // Move
       } else if (isOpponentPiece(target, color, allPieces)) {
-        addHighlight(targetRow, targetCol, 0xff0000); // Capture
+        addHighlight(targetRow, targetCol, isOpponentTurn ? 0xe5e4e2 : 0xff0000); // Capture
       }
     }
   }

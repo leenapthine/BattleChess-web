@@ -18,7 +18,7 @@
 
 import { getPieceAt } from '~/pixi/utils';
 import { setResurrectionTargets, setPendingResurrectionColor } from '~/state/gameState';
-
+import { highlightMoves as highlightStandardBishopMoves } from '../basic/Bishop';
 
 /**
  * Highlights all valid diagonal movement and capture positions for the Necromancer.
@@ -30,32 +30,9 @@ import { setResurrectionTargets, setPendingResurrectionColor } from '~/state/gam
  * @param {Function} addHighlight - Callback to register a highlight square.
  * @param {Array} allPieces - Current list of active game pieces.
  */
-export function highlightMoves(piece, addHighlight, allPieces) {
-  const directions = [
-    { dx: 1, dy: 1 }, { dx: 1, dy: -1 },
-    { dx: -1, dy: 1 }, { dx: -1, dy: -1 }
-  ];
-
-  for (const { dx, dy } of directions) {
-    for (let i = 1; i < 8; i++) {
-      const row = piece.row + i * dy;
-      const col = piece.col + i * dx;
-      if (row < 0 || row >= 8 || col < 0 || col >= 8) break;
-
-      const target = { row, col };
-      const occupant = getPieceAt(target, allPieces);
-      const isOpponent = occupant && occupant.color !== piece.color;
-
-      if (!occupant) {
-        addHighlight(row, col, 0xffff00);
-      } else {
-        if (isOpponent) {
-          addHighlight(row, col, 0xff0000);
-        }
-        break; // Can't move past occupied space
-      }
-    }
-  }
+export function highlightMoves(necromancer, addHighlight, allPieces) {
+  // Highlight standard Bishop moves
+  highlightStandardBishopMoves(necromancer, addHighlight, allPieces);
 }
 
 /**

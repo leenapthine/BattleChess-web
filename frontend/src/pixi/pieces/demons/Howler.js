@@ -91,7 +91,7 @@ export function handleHowlerCapture(row, col, pixiApp) {
   }
 
   // Check if the target piece is an enemy piece
-  if (targetPiece) {
+  if (targetPiece && targetPiece.color !== howlerPiece.color && targetPiece.isStone !== true) {
     let updatedPieces = handleCapture(targetPiece, currentPieces);
     howlerPiece.row = row;
     howlerPiece.col = col;

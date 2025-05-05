@@ -1,16 +1,23 @@
 import { getPieceAt, isOpponentPiece } from '~/pixi/utils';
+import { currentTurn } from '~/state/gameState';
 
 /**
- * Adds highlight markers for all valid Queen moves.
+ * Highlights all valid moves for a piece based on the current turn.
  * The Queen can move any number of spaces in a straight line (horizontal, vertical, or diagonal),
  * stopping at obstacles or opponent pieces.
  *
- * @param {Object} piece - The Queen piece
+ * @param {Object} piece - The Queen piece being selected
  * @param {Function} addHighlight - Callback to register highlight at (row, col, color)
  * @param {Array} allPieces - List of all pieces currently on the board
  */
 export function highlightMoves(piece, addHighlight, allPieces) {
   const { row, col, color } = piece;
+  
+  // Get current turn directly from the signal
+  const isOpponentTurn = color !== currentTurn(); // Check if it's the opponent's turn
+
+  // Determine the highlight color based on the turn
+  const highlightColor = isOpponentTurn ? 0xe5e4e2 : 0xffff00; // grey for opponent, yellow for the current player
 
   const directions = [
     { rowOffset: -1, colOffset: 0 },   // up
@@ -35,12 +42,14 @@ export function highlightMoves(piece, addHighlight, allPieces) {
 
       if (targetPiece) {
         if (isOpponentPiece(targetPos, color, allPieces)) {
-          addHighlight(targetRow, targetCol, 0xff0000); // red for capture
+          // Highlight the capture squares (red for opponent pieces)
+          addHighlight(targetRow, targetCol, isOpponentTurn ? 0xe5e4e2 : 0xff0000); // grey for opponent's turn, red for valid capture
         }
         break; // stop path after hitting any piece
       }
 
-      addHighlight(targetRow, targetCol, 0xffff00); // yellow for valid move
+      // Highlight valid move squares (yellow for the current player's turn, grey for opponent's turn)
+      addHighlight(targetRow, targetCol, highlightColor);
     }
   }
 }

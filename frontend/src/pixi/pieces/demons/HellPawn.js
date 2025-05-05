@@ -31,6 +31,7 @@ import {
     setSelectedSquare,
     setPieces,
     setHighlights,
+    switchTurn,
 } from '~/state/gameState';
 import { handleCapture } from '../../logic/handleCapture';
 
@@ -65,8 +66,13 @@ export function handleHellPawnCapture(row, col, pixiApp) {
     if (!hellPawnPiece || hellPawnPiece.type !== 'HellPawn' || targetPiece === hellPawnPiece) return false;
 
     // Check if the target piece is an enemy piece and not a pawn
-    if (targetPiece && targetPiece.color !== hellPawnPiece.color && targetPiece.type !== 'Pawn') {
-        let updatedPieces = handleCapture(targetPiece, currentPieces); // Handle capture logic
+    if (
+        targetPiece &&
+        targetPiece.color !== hellPawnPiece.color &&
+        targetPiece.type !== 'Pawn' &&
+        targetPiece.isStone !== true
+    ) {
+        let updatedPieces = handleCapture(targetPiece, currentPieces, hellPawnPiece);
 
         // Now, the HellPawn transforms into the captured piece (keeping the color of HellPawn)
         const transformedPiece = { ...targetPiece };
@@ -84,6 +90,7 @@ export function handleHellPawnCapture(row, col, pixiApp) {
         setSelectedSquare(null);
         setHighlights([]);
         drawBoard(pixiApp, handleSquareClick);
+        switchTurn();
         
         return true;
     }

@@ -27,6 +27,11 @@ import { getAdjacentTiles } from '../../utils';
 export function highlightMoves(piece, addHighlight, allPieces) {
   const isInLaunchMode = launchMode()?.id === piece.id;
   const isPawnLoaded = piece.pawnLoaded === true;
+  const row = piece.row;
+	const col = piece.col;
+  
+  // highlight self in cyan
+  addHighlight(row, col, 0x00ffff);
 
   // Step 2: Loading mode - highlight adjacent squares in cyan
   if (isInLoadingMode() && !isPawnLoaded) {

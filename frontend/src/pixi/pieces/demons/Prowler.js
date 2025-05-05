@@ -31,6 +31,9 @@ import {
   setHighlights,
   isSecondMove,
   setIsSecondMove,
+  switchTurn,
+  setSelectedPiece,
+  selectedPiece
 } from '~/state/gameState';
 import { handleCapture } from '../../logic/handleCapture';
 
@@ -56,37 +59,49 @@ export function highlightMoves(prowler, addHighlight, allPieces) {
  * @param {Object} pixiApp - The PixiJS application instance, used to render the board.
  * @returns {boolean} Returns true if a capture was performed, false otherwise.
  */
-export async function handleProwlerCapture(row, col, pixiApp) {
+export async function handleProwlerCapture(row, col, pixiApp, isTurn) {
   const currentPieces = pieces();
   const selectedPosition = selectedSquare();
   const prowlerPiece = selectedPosition ? getPieceAt(selectedPosition, currentPieces) : null;
   const targetPiece = getPieceAt({ row, col }, currentPieces);
 
   // Ensure the selected piece is a Prowler and it's not clicking on itself
-  if (!prowlerPiece || prowlerPiece.type !== 'Prowler' || targetPiece === prowlerPiece) return false;
+  if (!prowlerPiece || prowlerPiece.type !== 'Prowler' || targetPiece === prowlerPiece || !isTurn) return false;
 
   // Check if the Prowler is in the middle of a second move
   if (isSecondMove()) {
     setIsSecondMove(false);
+    switchTurn();
+    handleCapture(selectedPiece(), currentPieces);
+    setSelectedPiece(null);
     return false;
   }
 
   // Check if the target piece is an enemy piece
-  if (targetPiece && targetPiece.color !== prowlerPiece.color) {
-    let updatedPieces = handleCapture(targetPiece, currentPieces);
+  if (targetPiece && targetPiece.color !== prowlerPiece.color && targetPiece.type) {
+
+    if (targetPiece.type === 'QueenOfDestruction') {
+      switchTurn();
+      const remainingPieces = handleCapture(targetPiece, currentPieces, prowlerPiece);
+      setPieces(remainingPieces);
+      return false;
+    }
+
+    // set second move to true
+    setIsSecondMove(true);
+
+    setSelectedPiece(targetPiece);
+
+    // Update the pieces without the captured piece
+    let updatedPieces = currentPieces.filter(piece => piece.id !== targetPiece.id);
+    setPieces(updatedPieces);
 
     // Move the Prowler to the captured piece's square
     prowlerPiece.row = row;
     prowlerPiece.col = col;
 
-    // Update the pieces with the new position for the Prowler
-    updatedPieces = updatedPieces.filter(piece => piece.id !== prowlerPiece.id);  // Remove old Prowler
-    updatedPieces.push(prowlerPiece);  // Add the updated Prowler at the new position
-
-    setPieces(updatedPieces);
     setSelectedSquare({ row, col });
     setHighlights([]);
-    setIsSecondMove(true);
 
     // Now highlight the second move for the Prowler
     const highlightList = [];

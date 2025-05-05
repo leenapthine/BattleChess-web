@@ -15,7 +15,7 @@ import { highlightMoves as highlightStandardKnightMoves } from '~/pixi/pieces/ba
 import { getPieceAt } from '~/pixi/utils';
 import { drawBoard } from '../../drawBoard';
 import { handleSquareClick } from '../../clickHandler';
-import { pieces, selectedSquare, setSelectedSquare, setPieces, setHighlights } from '~/state/gameState';
+import { pieces, selectedSquare, setSelectedSquare, setPieces, setHighlights, switchTurn } from '~/state/gameState';
 
 /**
  * Highlights all valid moves for the Familiar piece.
@@ -45,7 +45,7 @@ export function highlightMoves(familiar, addHighlight, allPieces) {
  * @param {Object} pixiApp - The PixiJS application instance.
  * @returns {boolean} Returns true if the Familiar's state was toggled (stone/unstone), false otherwise.
  */
-export function handleFamiliarClick(row, col, pixiApp) {
+export function handleFamiliarClick(row, col, pixiApp, isTurn) {
   const currentPieces = pieces();
   const selectedPosition = selectedSquare();
   const familiarPiece = selectedPosition ? getPieceAt(selectedPosition, currentPieces) : null;
@@ -58,24 +58,28 @@ export function handleFamiliarClick(row, col, pixiApp) {
 
   if (familiarPiece.row !== row || familiarPiece.col !== col) {
     familiarPiece.isStone = false; 
-    return false; // Clicked square does not match the Familiar's position
+    return false;
   }
 
   // If the Familiar is clicked while it's turned to stone, undo the transformation
   if (familiarPiece.isStone) {
-    familiarPiece.isStone = false; // Unstone the Familiar
-    setPieces([...currentPieces]); // Update the board with the new state
-    setSelectedSquare(null); // Deselect the Familiar
-    setHighlights([]); // Clear the highlights
-    drawBoard(pixiApp, handleSquareClick); // Redraw the board
-    return true; // Successfully unstoned
+    familiarPiece.isStone = false;
+    setPieces([...currentPieces]);
+    setSelectedSquare(null);
+    setHighlights([]);
+    drawBoard(pixiApp, handleSquareClick);
+    return true;
   }
 
   // If the Familiar is clicked while not turned to stone, turn it to stone
-  familiarPiece.isStone = true; // Turn to stone
-  setPieces([...currentPieces]); // Update the board with the new state
-  setSelectedSquare(null); // Deselect the Familiar
-  setHighlights([]); // Clear the highlights
-  drawBoard(pixiApp, handleSquareClick); // Redraw the board
-  return true; // Successfully turned to stone
+  if (isTurn) {
+    familiarPiece.isStone = true;
+    setPieces([...currentPieces]);
+    setSelectedSquare(null);
+    setHighlights([]);
+    switchTurn();
+    drawBoard(pixiApp, handleSquareClick);
+    return true;
+  }
+  return false;
 }

@@ -13,19 +13,20 @@ import { performNecroPawnSacrifice } from '~/pixi/pieces/necro/NecroPawn';
 import { highlightValidMovesForPiece } from '~/pixi/highlight';
 import { drawBoard } from '~/pixi/drawBoard';
 import { handleSquareClick } from '~/pixi/clickHandler';
+import { clearBoardState } from './clearBoardState';
 
 /**
  * Handles all NecroPawn-specific clicks.
  * Covers both arming and detonating.
  * @returns {boolean} true if handled
  */
-export async function handleSacrificeClick(row, col, pixiApp, allPieces) {
+export async function handleSacrificeClick(row, col, pixiApp, allPieces, isTurn) {
   const detonation =
     sacrificeMode()?.row === row &&
     sacrificeMode()?.col === col &&
     sacrificeArmed();
 
-  if (detonation) {
+  if (detonation && isTurn) {
     const pawn = sacrificeMode();
     performNecroPawnSacrifice(pawn, allPieces);
 
@@ -34,6 +35,13 @@ export async function handleSacrificeClick(row, col, pixiApp, allPieces) {
     setSelectedSquare(null);
     await drawBoard(pixiApp, handleSquareClick);
     return true;
+  }
+
+  if (detonation && !isTurn) {
+    // If it's not the player's turn, do nothing
+    clearBoardState();
+    await drawBoard(pixiApp, handleSquareClick);
+    return false;
   }
 
   // Step into sacrifice mode if same NecroPawn clicked

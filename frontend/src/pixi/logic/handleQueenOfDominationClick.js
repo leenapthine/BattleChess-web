@@ -4,6 +4,7 @@ import {
   setSelectedSquare,
   selectedSquare,
   setHighlights,
+  currentTurn,
 } from '~/state/gameState';
 
 import { getPieceAt } from '~/pixi/utils';
@@ -41,7 +42,7 @@ export async function handleQueenOfDominationClick(row, col, pixiApp) {
   }
 
   // === Step 3: Process adjacent friendly click
-  if (clickedPiece && clickedPiece.color === queenPiece.color) {
+  if (clickedPiece && clickedPiece.color === queenPiece.color && clickedPiece.color === currentTurn()) {
     
     // --- Cancel if clicking herself again
     if (clickedPiece.id === queenPiece.id) {

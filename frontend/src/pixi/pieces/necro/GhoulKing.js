@@ -28,5 +28,13 @@ import { highlightMoves as highlightKingMoves } from '~/pixi/pieces/basic/King';
  * @param {Array} allPieces - All current board pieces.
  */
 export function highlightMoves(ghoulKing, addHighlight, allPieces) {
-    highlightKingMoves(ghoulKing, addHighlight, allPieces);
+  highlightKingMoves(ghoulKing, addHighlight, allPieces);
+
+  if (ghoulKing.raisesLeft > 0) {
+    const row = ghoulKing.row;
+    const col = ghoulKing.col;
+    
+    // highlight self in cyan
+    addHighlight(row, col, 0x00ffff);
+  }
 }

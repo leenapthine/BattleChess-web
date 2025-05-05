@@ -15,7 +15,6 @@ import { applyStunEffect } from '~/pixi/pieces/necro/GhostKnight';
 import { handlePawnHopperPostMove } from '~/pixi/pieces/beasts/PawnHopper';
 import { returnOriginalSprite } from '~/pixi/pieces/beasts/QueenOfDomination';
 import { handleCapture } from '~/pixi/logic/handleCapture';
-import { clearBoardState } from './clearBoardState';
 
 /**
  * Handles the movement of the currently selected piece to a destination square.
@@ -45,18 +44,18 @@ export async function handlePieceMove(destination, pixiApp) {
   // Step 2: Handle capture if an enemy piece is at the destination
   if (targetPiece) {
     // If there is a piece at the destination, attempt to handle the capture
-    updatedPieces = handleCapture(targetPiece, allPieces); // Handle the capture (removes the captured piece)
+    updatedPieces = handleCapture(targetPiece, allPieces, selectedPiece);
     
     // If handleCapture fails (i.e., if no piece is captured), we should return early
     if (updatedPieces === allPieces) {
-      return; // Exit early if the capture failed
+      return;
     }
   }
 
   // Step 3: If the capture was successful, move the selected piece to the destination
   updatedPieces = updatedPieces.map(piece =>
-    piece.row === fromSquare.row && piece.col === fromSquare.col // Find the selected piece
-      ? { ...piece, row: destination.row, col: destination.col } // Move it to the destination
+    piece.row === fromSquare.row && piece.col === fromSquare.col
+      ? { ...piece, row: destination.row, col: destination.col }
       : piece
   );
 
@@ -85,9 +84,9 @@ export async function handlePieceMove(destination, pixiApp) {
 
   // Step 6: Commit state updates
   setPieces(updatedPieces);
-  setSelectedSquare(null); // Deselect the piece
-  setHighlights([]); // Clear any highlights
-  setSacrificeMode(null); // Clear sacrifice mode
+  setSelectedSquare(null);
+  setHighlights([]);
+  setSacrificeMode(null);
 
   // Step 7: Apply any passive effects triggered by the move
   const movedPieceFinal = { ...selectedPiece, row: destination.row, col: destination.col };
@@ -96,6 +95,6 @@ export async function handlePieceMove(destination, pixiApp) {
 
   // Step 8: Redraw the board
   await drawBoard(pixiApp, handleSquareClick);
-  return true; // Indicate a successful move
+  return true;
 }
 

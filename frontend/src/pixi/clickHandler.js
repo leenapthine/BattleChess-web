@@ -5,7 +5,11 @@ import {
   highlights,
   setHighlights,
   isInDominationMode,
+  currentTurn,
+  switchTurn,
 } from '~/state/gameState';
+
+import { getPieceAt } from './utils';
 
 import { highlightValidMovesForPiece } from '~/pixi/highlight';
 import { isSquareSelected } from '~/pixi/utils';
@@ -59,11 +63,123 @@ export async function handleSquareClick(rowIndex, columnIndex, pixiApp) {
   const isClickedHighlighted = highlights().some(
     highlight =>
       highlight.row === rowIndex &&
-      highlight.col === columnIndex &&
-      !isReclickedSelection
+      highlight.col === columnIndex
   );
 
-  // === 0. Check if in the middle of domination move
+  // Move currently selected piece to highlighted square
+  if (isClickedHighlighted && currentSelection) {
+
+    let selectedPiece = getPieceAt(currentSelection, currentPieces);
+    if (!selectedPiece) {return;}
+    let isTurn = selectedPiece.color === currentTurn();
+
+    // 1. Check for NecroPawn sacrifice
+    if (
+      await handleSacrificeClick(rowIndex, columnIndex, pixiApp, currentPieces, isTurn)) {
+      return;
+    }
+
+    // 2. Handle special DeadLauncher behavior
+    if (await handleDeadLauncherClick(rowIndex, columnIndex, pixiApp, isTurn)) {
+      return;
+    }
+
+    // 3. Handle special GhoulKing behavior
+    if (await handleGhoulKingClick(rowIndex, columnIndex, pixiApp)) {
+      return;
+    }
+
+    // 4. Handle BoulderThrower click logic
+    if (await handleBoulderThrowerClick(rowIndex, columnIndex, pixiApp, isTurn)) {
+      return;
+    }
+
+    // 5. Handle YoungWiz post-move logic
+    if (await handleYoungWizZapClick(rowIndex, columnIndex, pixiApp)) {
+      return;
+    }
+
+    // 6. Handle WizardTower capture logic
+    if (await handleWizardTowerCapture(rowIndex, columnIndex, pixiApp)) {
+      return;
+    }
+
+    // 7. Handle WizardKing logic
+    if (await handleWizardKingCapture(rowIndex, columnIndex, pixiApp, isTurn)) {
+      return;
+    }
+
+    // 8. Handle QueenOfDomination click logic
+    if (await handleQueenOfDominationClick(rowIndex, columnIndex, pixiApp)) {
+      return;
+    }
+
+    // 9. Handle QueenOfIllusions click logic
+    if (await handleQueenOfIllusionsSwap(rowIndex, columnIndex, pixiApp)) {
+      return;
+    }
+
+    // 10. Handle Familiar click logic
+    if (await handleFamiliarClick(rowIndex, columnIndex, pixiApp, isTurn)) {
+      return;
+    }
+
+    // 11. Handle Portal click logic
+    if (await handlePortalClick(rowIndex, columnIndex, pixiApp, isTurn)) {
+      return;
+    }
+
+    // 12. Handle Howler click logic
+    if (await handleHowlerCapture(rowIndex, columnIndex, pixiApp)) {
+      return;
+    }
+
+    // 13. Handle HellPawn click logic
+    if (await handleHellPawnCapture(rowIndex, columnIndex, pixiApp)) {
+      return;
+    }
+
+    // 14. Handle Prowler click logic
+    if (await handleProwlerCapture(rowIndex, columnIndex, pixiApp, isTurn)) {
+      return;
+    }
+
+    // 15. Handle Beholder click logic
+    if (await handleBeholderClick(rowIndex, columnIndex, pixiApp, isTurn)) {
+      return;
+    }
+
+    // 16. Handle HellKing click logic
+    if (await handleHellKingCapture(rowIndex, columnIndex, pixiApp, isTurn)) {
+      return;
+    }
+
+    if (isReclickedSelection) {
+      // If the clicked square is the same as the selected square, deselect it
+      await clearBoardState();
+      return;
+    }
+
+    // Check if the selected piece is of the correct player's color (turn check)
+    if (!isTurn) {
+      console.log("It's not your turn, you cannot move this piece.");
+      return false;
+    }
+
+    // Now attempt the move (only if it's the correct player's turn)
+    const moveSuccessful = await handlePieceMove(
+      { row: rowIndex, col: columnIndex },
+      pixiApp,
+    );
+
+    // Switch turn after the move if successful
+    if (moveSuccessful) {
+      switchTurn();
+      return;
+    }
+  }
+
+  // Check if in the middle of domination move
   if (isInDominationMode()) {
     const isClickedHighlighted = highlights().some(
       highlight => highlight.row === rowIndex && highlight.col === columnIndex
@@ -75,99 +191,10 @@ export async function handleSquareClick(rowIndex, columnIndex, pixiApp) {
     }
   }
 
-  // === 1. Check for NecroPawn sacrifice
-  if (await handleSacrificeClick(rowIndex, columnIndex, pixiApp, currentPieces)) {
+  // Handle resurrection tile placement
+  if (
+    await handleResurrectionClick(rowIndex, columnIndex, pixiApp)) {
     return;
-  }
-
-  // === 2. Handle resurrection tile placement
-  if (await handleResurrectionClick(rowIndex, columnIndex, pixiApp)) {
-    return;
-  }
-
-  // === 3. Handle special DeadLauncher behavior
-  if (await handleDeadLauncherClick(rowIndex, columnIndex, pixiApp)) {
-    return;
-  }
-
-  // 3. Handle special GhoulKing behavior
-  if (await handleGhoulKingClick(rowIndex, columnIndex, pixiApp)) {
-    return;
-  }
-
-  // 4. Handle BoulderThrower click logic
-  if (await handleBoulderThrowerClick(rowIndex, columnIndex, pixiApp)) {
-    return;
-  }
-
-  // 5. Handle YoungWiz post-move logic
-  if (await handleYoungWizZapClick(rowIndex, columnIndex, pixiApp)) {
-    return;
-  }
-
-  // 6. Handle WizardTower capture logic
-  if (await handleWizardTowerCapture(rowIndex, columnIndex, pixiApp)) {
-    return;
-  }
-
-  // 7. Handle WizardKing logic
-  if (await handleWizardKingCapture(rowIndex, columnIndex, pixiApp)) {
-    return;
-  }
-
-  // 8. Handle QueenOfDomination click logic
-  if (await handleQueenOfDominationClick(rowIndex, columnIndex, pixiApp)) {
-    return;
-  }
-
-  // 9. Handle QueenOfIllusions click logic
-  if (await handleQueenOfIllusionsSwap(rowIndex, columnIndex, pixiApp)) {
-    return;
-  }
-
-  // 10. Handle Familiar click logic
-  if (await handleFamiliarClick(rowIndex, columnIndex, pixiApp)) {
-    return;
-  }
-
-  // 11. Handle Portal click logic
-  if (await handlePortalClick(rowIndex, columnIndex, pixiApp)) {
-    return;
-  }
-
-  // 12. Handle Howler click logic
-  if (await handleHowlerCapture(rowIndex, columnIndex, pixiApp)) {
-    return;
-  }
-
-  // 13. Handle HellPawn click logic
-  if (await handleHellPawnCapture(rowIndex, columnIndex, pixiApp)) {
-    return;
-  }
-
-  // 14. Handle Prowler click logic
-  if (await handleProwlerCapture(rowIndex, columnIndex, pixiApp)) {
-    return;
-  }
-
-  // 15. Handle Beholder click logic
-  if (await handleBeholderClick(rowIndex, columnIndex, pixiApp)) {
-    return;
-  }
-
-  // 16. Handle HellKing click logic
-  if (await handleHellKingCapture(rowIndex, columnIndex, pixiApp)) {
-    return;
-  }
-
-
-  // === 4. Move currently selected piece to highlighted square
-  if (isClickedHighlighted && currentSelection) {
-    const moveSuccessful = await handlePieceMove(
-      { row: rowIndex, col: columnIndex },
-      pixiApp
-    );
-    if (moveSuccessful) return;
   }
 
   // === 5. Select a new piece

@@ -12,7 +12,7 @@ import { highlightMoves as highlightStandardPawnMoves } from '~/pixi/pieces/basi
 import { getPieceAt } from '~/pixi/utils';
 import { drawBoard } from '../../drawBoard';
 import { handleSquareClick } from '../../clickHandler';
-import { pieces, selectedSquare, setSelectedSquare, setPieces, setHighlights } from '~/state/gameState';
+import { pieces, selectedSquare, setSelectedSquare, setPieces, setHighlights, currentTurn } from '~/state/gameState';
 import { handleCapture } from '../../logic/handleCapture';
 
 /**
@@ -26,11 +26,14 @@ export function highlightMoves(youngWiz, addHighlight, allPieces) {
   const direction = youngWiz.color === 'White' ? 1 : -1;
   highlightStandardPawnMoves(youngWiz, addHighlight, allPieces);
 
+  // Get current turn directly from the signal
+  const isOpponentTurn = youngWiz.color !== currentTurn();
+
   const zapCapturePosition = { row: youngWiz.row + direction, col: youngWiz.col };
   const pieceAtZap = getPieceAt(zapCapturePosition, allPieces);
 
   if (pieceAtZap && pieceAtZap.color !== youngWiz.color) {
-    addHighlight(zapCapturePosition.row, zapCapturePosition.col, 0xff0000); // Highlight zap capture in red
+    addHighlight(zapCapturePosition.row, zapCapturePosition.col, isOpponentTurn ? 0xe5e4e2 : 0xff0000); // Highlight zap capture in red
   }
 }
 

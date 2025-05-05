@@ -13,6 +13,7 @@
 // - Used by the PixiJS board renderer to determine valid tiles when a BeastKnight is selected.
 
 import { getPieceAt } from '~/pixi/utils';
+import { currentTurn } from '~/state/gameState';
 
 /**
  * Highlights all valid moves for the BeastKnight.
@@ -24,6 +25,9 @@ import { getPieceAt } from '~/pixi/utils';
  */
 export function highlightMoves(beastKnight, addHighlight, allPieces) {
   const { row, col, color } = beastKnight;
+
+  // Get current turn directly from the signal
+  const isOpponentTurn = color !== currentTurn();
 
   // All 8 possible BeastKnight L-shaped moves
   const moveOffsets = [
@@ -47,9 +51,9 @@ export function highlightMoves(beastKnight, addHighlight, allPieces) {
     const targetPiece = getPieceAt({ row: targetRow, col: targetCol }, allPieces);
 
     if (!targetPiece) {
-      addHighlight(targetRow, targetCol); // Standard move
+      addHighlight(targetRow, targetCol, isOpponentTurn ? 0xe5e4e2 : 0xffff00); // Standard move
     } else if (targetPiece.color !== color) {
-      addHighlight(targetRow, targetCol, 0xff0000); // Capture
+      addHighlight(targetRow, targetCol, isOpponentTurn ? 0xe5e4e2 : 0xff0000); // Capture
     }
   }
 }

@@ -6,7 +6,10 @@ import {
   setPendingResurrectionColor,
   pendingResurrectionColor,
   isInSacrificeSelectionMode,
-  setIsInSacrificeSelectionMode
+  setIsInSacrificeSelectionMode,
+  switchTurn,
+  isSecondMove,
+  currentTurn,
 } from '~/state/gameState';
 
 import { drawBoard } from '~/pixi/drawBoard';
@@ -40,16 +43,19 @@ export async function handleResurrectionClick(rowIndex, columnIndex, pixiApp) {
     );
 
     if (clickedPiece && isSacrificeTarget) {
-      console.log("Pawn selected for sacrifice:", clickedPiece);
+      let updatedPieces = [...currentPieces];
 
-      // Remove the pawn from the board
-      const updatedPieces = currentPieces.filter(
-        piece => !(piece.row === rowIndex && piece.col === columnIndex)
-      );
-      setPieces(updatedPieces);
+      if (clickedPiece.type !== 'Prowler') {
+          // Remove the pawn from the board
+          updatedPieces = currentPieces.filter(
+          piece => !(piece.row === rowIndex && piece.col === columnIndex)
+        );
 
-      // Track the sacrifice
-      pendingSacrifices.push(clickedPiece);
+        if (!isSecondMove()) {
+          setPieces(updatedPieces);
+          pendingSacrifices.push(clickedPiece);
+        }
+      } 
 
       // If two pawns have been sacrificed, revive QueenOfBones
       if (pendingSacrifices.length >= 2) {
@@ -71,6 +77,9 @@ export async function handleResurrectionClick(rowIndex, columnIndex, pixiApp) {
           };
 
           setPieces([...updatedPieces, revivedQueen]);
+          if (queenColor !== currentTurn()) {
+            switchTurn();
+          }
         } else {
           console.log("Spawn point occupied. Revival cancelled.");
         }
@@ -84,11 +93,13 @@ export async function handleResurrectionClick(rowIndex, columnIndex, pixiApp) {
         return true;
       } else {
         // Still waiting for 2nd pawn; remove highlight for the selected one
-        const remainingTargets = currentTargets.filter(
-          target => !(target.row === rowIndex && target.col === columnIndex)
-        );
-        setResurrectionTargets(remainingTargets);
-        await drawBoard(pixiApp, handleSquareClick);
+        if (!isSecondMove()) {
+          const remainingTargets = currentTargets.filter(
+            target => !(target.row === rowIndex && target.col === columnIndex)
+          );
+          setResurrectionTargets(remainingTargets);
+          await drawBoard(pixiApp, handleSquareClick);
+        }
         return true;
       }
     }
@@ -128,12 +139,13 @@ export function triggerResurrectionPrompt(movingPiece, capturedPiece, destinatio
   if (
     movingPiece?.type === 'Necromancer' &&
     capturedPiece &&
-    capturedPiece.color !== movingPiece.color
+    capturedPiece.color !== movingPiece.color &&
+    capturedPiece.type !== 'QueenOfDestruction'
   ) {
     highlightRaiseDeadTiles(destination, updatedPieces, movingPiece.color);
   }
-
   if (capturedPiece?.type === 'QueenOfBones') {
     triggerQueenOfBonesRevival(updatedPieces, capturedPiece.color);
+    console.log("QueenOfBones captured. Sacrifice prompt triggered.");
   }
 }
