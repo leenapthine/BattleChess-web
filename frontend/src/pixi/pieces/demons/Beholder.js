@@ -23,14 +23,16 @@ import { handleSquareClick } from '../../clickHandler';
 import {
   pieces,
   selectedSquare,
-  setSelectedSquare,
   setPieces,
   setHighlights,
   isInBoulderMode,
   setIsInBoulderMode,
   currentTurn,
+  switchTurn,
+  setSelectedSquare,
 } from '~/state/gameState';
 import { handleCapture } from '../../logic/handleCapture';
+import { clearBoardState } from '../../logic/clearBoardState';
 
 /**
  * Adds highlight markers for all valid Beholder moves.
@@ -47,7 +49,7 @@ export function highlightMoves(beholder, addHighlight, allPieces) {
   addHighlight(row, col, 0x00ffff);
 
   // Get current turn directly from the signal
-  const isOpponentTurn = color !== currentTurn(); // Check if it's the opponent's turn
+  const isOpponentTurn = color !== currentTurn();
 
   // Determine the highlight color based on the turn
   const highlightColor = isOpponentTurn ? 0xe5e4e2 : 0xffff00;
@@ -70,7 +72,7 @@ export function highlightMoves(beholder, addHighlight, allPieces) {
     const targetPiece = getPieceAt(targetPos, allPieces);
 
     if (!targetPiece) {
-      addHighlight(targetRow, targetCol, highlightColor); // yellow for valid move
+      addHighlight(targetRow, targetCol, highlightColor);
     }
   }
 }
@@ -111,23 +113,35 @@ export function highlightCaptureZones(beholder, addHighlight, allPieces) {
  * @param {Object} pixiApp - The PixiJS application instance, used to render the board.
  * @returns {boolean} Returns true if a capture was performed, false otherwise.
  */
-export async function handleBeholderClick(row, col, pixiApp) {
+export async function handleBeholderClick(row, col, pixiApp, isTurn) {
   const currentPieces = pieces();
   const targetPiece = getPieceAt({ row, col }, currentPieces);
   const currentSelection = selectedSquare();
   const selectedPiece = currentSelection ? getPieceAt(currentSelection, currentPieces) : null;
 
   // === Step 1: Launch capture logic
-  if (selectedPiece && selectedPiece.type === 'Beholder' && isInBoulderMode()) {
-    if (targetPiece && targetPiece.color !== selectedPiece.color) {
+  if (
+    isTurn && 
+    selectedPiece && 
+    selectedPiece.type === 'Beholder' 
+    && isInBoulderMode()
+  ) {
+    if (targetPiece && targetPiece.color !== selectedPiece.color && targetPiece.isStone !== true) {
       const captured = getPieceAt({ row, col }, currentPieces);
-      const updatedPieces = handleCapture(captured, currentPieces, selectedPiece);
+      const updatedPieces = handleCapture(captured, currentPieces);
       setPieces(updatedPieces);
-      setSelectedSquare(null);
-      setHighlights([]);
       setIsInBoulderMode(false);
+      setSelectedSquare(null);
+	    setHighlights([]);
+      switchTurn();
+
       await drawBoard(pixiApp, handleSquareClick);
       return true;
+    }
+    else {
+      clearBoardState();
+      await drawBoard(pixiApp, handleSquareClick);
+      return false;
     }
   }
 
@@ -139,11 +153,9 @@ export async function handleBeholderClick(row, col, pixiApp) {
     selectedPiece.type === 'Beholder' &&
     !isInBoulderMode()
   ) {
-    // Get current turn directly from the signal
-    const isOpponentTurn = selectedPiece.color !== currentTurn(); // Check if it's the opponent's turn
 
     // Determine the highlight color based on the turn
-    const highlightColor = isOpponentTurn ? 0xe5e4e2 : 0xff0000;
+    const highlightColor = !isTurn ? 0xe5e4e2 : 0xff0000;
 
     const launchTargets = [];
     highlightCaptureZones(selectedPiece, (highlightRow, highlightCol) => {

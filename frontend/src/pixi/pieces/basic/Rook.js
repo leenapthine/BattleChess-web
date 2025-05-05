@@ -38,7 +38,7 @@ export function highlightMoves(piece, addHighlight, allPieces) {
       if (targetPiece) {
         if (isOpponentPiece(targetPos, color, allPieces)) {
           // Highlight the capture squares (red for opponent pieces)
-          addHighlight(targetRow, targetCol, highlightColor); // grey for opponent's turn, red for valid capture
+          addHighlight(targetRow, targetCol, isOpponentTurn ? 0xe5e4e2 : 0xff0000); // grey for opponent's turn, red for valid capture
         }
         break; // stop path after hitting any piece
       }

@@ -16,7 +16,7 @@ import { highlightMoves as highlightStandardKingMoves } from '~/pixi/pieces/basi
 import { getPieceAt } from '~/pixi/utils';
 import { drawBoard } from '../../drawBoard';
 import { handleSquareClick } from '../../clickHandler';
-import { pieces, selectedSquare, currentTurn, setSelectedSquare, setPieces, setHighlights } from '~/state/gameState';
+import { pieces, selectedSquare, currentTurn, setSelectedSquare, setPieces, setHighlights,switchTurn } from '~/state/gameState';
 import { handleCapture } from '../../logic/handleCapture';
 
 /**
@@ -57,24 +57,24 @@ function highlightVerticalCapture(wizardKing, addHighlight, allPieces) {
     const pieceAtPos = getPieceAt({ row: currentRow, col: column }, allPieces);
     if (pieceAtPos) {
       if (pieceAtPos.color !== wizardKing.color) {
-        addHighlight(currentRow, column, isOpponentTurn ? 0xe5e4e2 : 0xff0000); // Highlight the first enemy piece in the column (upward)
+        addHighlight(currentRow, column, isOpponentTurn ? 0xe5e4e2 : 0xff0000);
       }
       break; // Stop at the first piece (no shooting through pieces)
     }
-    currentRow += directionUp; // Continue moving up if no piece found
+    currentRow += directionUp;
   }
 
   // Check vertical line downwards
   currentRow = wizardKing.row + directionDown;
-  while (currentRow < 8) { // Assuming an 8x8 board
+  while (currentRow < 8) {
     const pieceAtPos = getPieceAt({ row: currentRow, col: column }, allPieces);
     if (pieceAtPos) {
       if (pieceAtPos.color !== wizardKing.color) {
-        addHighlight(currentRow, column, isOpponentTurn ? 0xe5e4e2 : 0xff0000); // Highlight the first enemy piece in the column (downward)
+        addHighlight(currentRow, column, isOpponentTurn ? 0xe5e4e2 : 0xff0000);
       }
       break; // Stop at the first piece (no shooting through pieces)
     }
-    currentRow += directionDown; // Continue moving down if no piece found
+    currentRow += directionDown;
   }
 }
 
@@ -87,7 +87,7 @@ function highlightVerticalCapture(wizardKing, addHighlight, allPieces) {
  * @param {Object} pixiApp - The PixiJS application instance.
  * @returns {boolean} Returns true if a capture was performed, false otherwise.
  */
-export function handleWizardKingCapture(row, col, pixiApp) {
+export function handleWizardKingCapture(row, col, pixiApp, isTurn) {
   const currentPieces = pieces();
   const selectedPosition = selectedSquare();
   const wizardKingPiece = selectedPosition ? getPieceAt(selectedPosition, currentPieces) : null;
@@ -98,19 +98,24 @@ export function handleWizardKingCapture(row, col, pixiApp) {
   // Perform normal king capture (1-square perimeter) if clicked piece is in range
   if (targetPiece && Math.abs(targetPiece.row - wizardKingPiece.row) <= 1 && Math.abs(targetPiece.col - wizardKingPiece.col) <= 1) {
     // Ensure that the WizardKing cannot capture itself
-    if (targetPiece === wizardKingPiece) return false;    
-    const updatedBoard = handleCapture(targetPiece, currentPieces);
-    
-    // Move the WizardKing to the captured piece's position
-    wizardKingPiece.row = targetPiece.row;
-    wizardKingPiece.col = targetPiece.col;
+    if (targetPiece === wizardKingPiece) return false; 
+
+    let updatedBoard;
+
+    if (isTurn) {
+      updatedBoard = handleCapture(targetPiece, currentPieces);
+
+      // Move the WizardKing to the captured piece's position
+      wizardKingPiece.row = targetPiece.row;
+      wizardKingPiece.col = targetPiece.col;
+    }
     
     setPieces(updatedBoard);    
     setSelectedSquare(null);
     setHighlights([]);    
     drawBoard(pixiApp, handleSquareClick);
     
-    return true;  // Indicate the capture was successful
+    return true;
   }
 
   // Perform vertical line-of-sight capture if an enemy piece is in line of sight
@@ -123,12 +128,13 @@ export function handleWizardKingCapture(row, col, pixiApp) {
   while (currentRow >= 0) {
     const pieceAtPos = getPieceAt({ row: currentRow, col: column }, currentPieces);
     if (pieceAtPos) {
-      if (targetPiece && pieceAtPos.color !== wizardKingPiece.color && pieceAtPos !== wizardKingPiece) {
-        const updatedBoard = handleCapture(pieceAtPos, currentPieces); // Capture piece at target
+      if (isTurn && targetPiece && pieceAtPos.color !== wizardKingPiece.color && pieceAtPos !== wizardKingPiece) {
+        const updatedBoard = handleCapture(pieceAtPos, currentPieces);
         setPieces(updatedBoard);
         setSelectedSquare(null);
         setHighlights([]);
         drawBoard(pixiApp, handleSquareClick);
+        switchTurn();
         return true;
       }
       break; // Stop if a friendly piece is encountered or the WizardKing itself is targeted
@@ -141,8 +147,8 @@ export function handleWizardKingCapture(row, col, pixiApp) {
   while (currentRow < 8) {
     const pieceAtPos = getPieceAt({ row: currentRow, col: column }, currentPieces);
     if (pieceAtPos) {
-      if (targetPiece && pieceAtPos.color !== wizardKingPiece.color && pieceAtPos !== wizardKingPiece) {
-        const updatedBoard = handleCapture(pieceAtPos, currentPieces); // Capture piece at target
+      if (isTurn && targetPiece && pieceAtPos.color !== wizardKingPiece.color && pieceAtPos !== wizardKingPiece) {
+        const updatedBoard = handleCapture(pieceAtPos, currentPieces);
         setPieces(updatedBoard);
         setSelectedSquare(null);
         setHighlights([]);

@@ -23,9 +23,8 @@
 // - A powerful tactical unit capable of punishing dense clusters of enemies — or misused, friendly fire.
 
 import { highlightMoves as hightlightStandardPawnMoves } from '../basic/Pawn';
-import { setSacrificeMode, sacrificeMode, setHighlights, setPieces, currentTurn } from '~/state/gameState';
+import { setSacrificeMode, sacrificeMode, setHighlights, setPieces, currentTurn, switchTurn } from '~/state/gameState';
 import { handleCapture } from '~/pixi/logic/handleCapture';
-
 
 /**
  * Highlight valid moves for a NecroPawn.
@@ -41,21 +40,18 @@ import { handleCapture } from '~/pixi/logic/handleCapture';
  * @param {Array} allPieces - Array of all current pieces on the board.
  */
 export function highlightMoves(piece, addHighlight, allPieces) {
-	// Highlight standard pawn moves
-	hightlightStandardPawnMoves(piece, addHighlight, allPieces);
+  const inSacrificeMode = sacrificeMode()?.id === piece.id;
 
-	// Get current turn directly from the signal
+  // Get current turn directly from the signal
 	const isOpponentTurn = piece.color !== currentTurn(); // Check if it's the opponent's turn
 
 	// Determine the highlight color based on the turn
-	const highlightColor = isOpponentTurn ? 0xe5e4e2 : 0xffff00;
+	const highlightColor = isOpponentTurn ? 0xe5e4e2 : 0xff0000;
 
-	const inSacrificeMode = sacrificeMode()?.id === piece.id;
-
-	// Highlight self: blue (initial), red (if in sacrifice mode)
+  // Highlight self: blue (initial), red (if in sacrifice mode)
 	addHighlight(piece.row, piece.col, inSacrificeMode ? 0xff0000 : 0x00ffff);
 
-	// AoE preview if in sacrifice mode
+  // AoE preview if in sacrifice mode
 	if (inSacrificeMode) {
 		console.log("in sacrifice mode");
 		getSurroundingTiles(piece.row, piece.col).forEach(({ row: r, col: c }) => {
@@ -65,6 +61,9 @@ export function highlightMoves(piece, addHighlight, allPieces) {
 		});
 		return;
 	}
+
+	// Highlight standard pawn moves
+	hightlightStandardPawnMoves(piece, addHighlight, allPieces);
 }
   
 
@@ -85,10 +84,10 @@ export function performNecroPawnSacrifice(necroPawn, allPieces) {
   });
 	
   // Apply handleCapture to each victim
-	let updatedPieces = allPieces;
-	for (const victim of victims) {
-		updatedPieces = handleCapture(victim, updatedPieces, necroPawn);
-	}
+  let updatedPieces = allPieces;
+  for (const victim of victims) {
+    updatedPieces = handleCapture(victim, updatedPieces, necroPawn);
+  }
 
 	// Also remove the necroPawn itself
   updatedPieces = updatedPieces.filter(p => p.id !== necroPawn.id);
@@ -96,6 +95,7 @@ export function performNecroPawnSacrifice(necroPawn, allPieces) {
   setPieces(updatedPieces);
   setHighlights([]);
   setSacrificeMode(null);
+  switchTurn();
 }
 
 /**

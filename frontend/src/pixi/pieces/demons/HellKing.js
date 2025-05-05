@@ -8,8 +8,8 @@ import {
   setSelectedSquare,
   setPieces,
   setHighlights,
+  switchTurn,
 } from '~/state/gameState';
-import { handleCapture } from '../../logic/handleCapture';
 
 /**
  * Highlights all valid moves for the HellKing piece.
@@ -32,7 +32,7 @@ export function highlightMoves(hellKing, addHighlight, allPieces) {
  * @param {Object} pixiApp - The PixiJS application instance, used to render the board.
  * @returns {boolean} Returns true if a capture was performed, false otherwise.
  */
-export function handleHellKingCapture(row, col, pixiApp) {
+export function handleHellKingCapture(row, col, pixiApp, isTurn) {
   const currentPieces = pieces();
   const selectedPosition = selectedSquare();
   const hellKingPiece = selectedPosition ? getPieceAt(selectedPosition, currentPieces) : null;
@@ -42,8 +42,8 @@ export function handleHellKingCapture(row, col, pixiApp) {
   if (!hellKingPiece || hellKingPiece.type !== 'HellKing' || targetPiece === hellKingPiece) return false;
 
   // Check if the target piece is an enemy piece
-  if (targetPiece && targetPiece.color !== hellKingPiece.color) {
-    let updatedPieces = handleCapture(targetPiece, currentPieces); // Handle capture logic
+  if (targetPiece && targetPiece.color !== hellKingPiece.color && targetPiece.isStone !== true && isTurn) {
+    let updatedPieces = currentPieces.filter(p => p.id !== targetPiece.id);
 
     // Now, the HellKing transforms into the captured piece (keeping the color of HellKing)
     const transformedPiece = { ...targetPiece };
@@ -59,6 +59,8 @@ export function handleHellKingCapture(row, col, pixiApp) {
     setPieces(updatedPieces);
     setSelectedSquare(null);
     setHighlights([]);
+    switchTurn();
+
     drawBoard(pixiApp, handleSquareClick);
     return true;
     }

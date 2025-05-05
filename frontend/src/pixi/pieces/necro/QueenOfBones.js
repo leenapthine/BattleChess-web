@@ -27,55 +27,55 @@
 // - Sacrifice and respawn behavior is triggered from `triggerResurrectionPrompt()` in `handlePieceMove.js`.
 
 import {
-    setResurrectionTargets,
-    setPendingResurrectionColor,
-    setIsInSacrificeSelectionMode,
-  } from '~/state/gameState';
+  setResurrectionTargets,
+  setPendingResurrectionColor,
+  setIsInSacrificeSelectionMode,
+} from '~/state/gameState';
   
-  import { highlightMoves as highlightStandardQueenMoves } from '~/pixi/pieces/basic/Queen';
+import { highlightMoves as highlightStandardQueenMoves } from '~/pixi/pieces/basic/Queen';
   
-  /**
-   * Highlights valid movement and capture tiles for the QueenOfBones.
-   * Delegates to standard Queen movement logic.
-   *
-   * @param {Object} queenOfBones - The QueenOfBones piece.
-   * @param {Function} addHighlight - Callback to register highlight objects.
-   * @param {Array} allPieces - All pieces currently on the board.
-   */
-  export function highlightMoves(queenOfBones, addHighlight, allPieces) {
-    highlightStandardQueenMoves(queenOfBones, addHighlight, allPieces);
+/**
+ * Highlights valid movement and capture tiles for the QueenOfBones.
+ * Delegates to standard Queen movement logic.
+ *
+ * @param {Object} queenOfBones - The QueenOfBones piece.
+ * @param {Function} addHighlight - Callback to register highlight objects.
+ * @param {Array} allPieces - All pieces currently on the board.
+ */
+export function highlightMoves(queenOfBones, addHighlight, allPieces) {
+  highlightStandardQueenMoves(queenOfBones, addHighlight, allPieces);
+}
+
+/**
+ * Triggers revival prompt for QueenOfBones after it is captured.
+ * If 2 or more friendly pawns exist, highlights them for sacrifice.
+ *
+ * @param {Array} updatedPieces - All board pieces after the QueenOfBones has been captured.
+ * @param {string} queenColor - The color of the QueenOfBones that was captured.
+ */
+export function triggerQueenOfBonesRevival(updatedPieces, queenColor) {
+  const eligiblePawns = updatedPieces.filter(
+    piece =>
+      piece.color === queenColor &&
+      (
+        piece.type === 'Pawn' ||
+        piece.type === 'NecroPawn' ||
+        piece.type === 'HellPawn' ||
+        piece.type === 'YoungWiz' ||
+        piece.type === 'PawnHopper'
+      )
+  );
+
+  if (eligiblePawns.length >= 2) {
+    const sacrificeTiles = eligiblePawns.map(pawn => ({
+      row: pawn.row,
+      col: pawn.col,
+      color: 0x00ffff,
+    }));
+
+    setResurrectionTargets(sacrificeTiles);
+    setPendingResurrectionColor(queenColor);
+    setIsInSacrificeSelectionMode(true);
   }
-  
-  /**
-   * Triggers revival prompt for QueenOfBones after it is captured.
-   * If 2 or more friendly pawns exist, highlights them for sacrifice.
-   *
-   * @param {Array} updatedPieces - All board pieces after the QueenOfBones has been captured.
-   * @param {string} queenColor - The color of the QueenOfBones that was captured.
-   */
-  export function triggerQueenOfBonesRevival(updatedPieces, queenColor) {
-    const eligiblePawns = updatedPieces.filter(
-      piece =>
-        piece.color === queenColor &&
-        (
-          piece.type === 'Pawn' ||
-          piece.type === 'NecroPawn' ||
-          piece.type === 'HellPawn' ||
-          piece.type === 'YoungWiz' ||
-          piece.type === 'PawnHopper'
-        )
-    );
-  
-    if (eligiblePawns.length >= 2) {
-      const sacrificeTiles = eligiblePawns.map(pawn => ({
-        row: pawn.row,
-        col: pawn.col,
-        color: 0x880088, // Purple highlight for sacrifice prompt
-      }));
-  
-      setResurrectionTargets(sacrificeTiles);
-      setPendingResurrectionColor(queenColor);
-      setIsInSacrificeSelectionMode(true);
-    }
-  }
+}
   

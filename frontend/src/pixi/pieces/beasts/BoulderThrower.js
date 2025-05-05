@@ -16,16 +16,19 @@
 import { getPieceAt } from '~/pixi/utils';
 import {
   selectedSquare,
-  setSelectedSquare,
   pieces,
   setPieces,
   setHighlights,
   isInBoulderMode,
-  setIsInBoulderMode
+  setIsInBoulderMode,
+  currentTurn,
+  switchTurn,
+  setSelectedSquare,
 } from '~/state/gameState';
 import { drawBoard } from '~/pixi/drawBoard';
 import { handleSquareClick } from '~/pixi/clickHandler';
 import { handleCapture } from '~/pixi/logic/handleCapture';
+import { clearBoardState } from '~/pixi/logic/clearBoardState';
 
 /**
  * Highlights legal movement tiles for the BoulderThrower.
@@ -39,7 +42,13 @@ export function highlightMoves(boulderThrower, addHighlight, allPieces) {
   const { row: originRow, col: originCol } = boulderThrower;
 
   // highlight self in cyan
-  addHighlight(row, col, 0x00ffff);
+  addHighlight(originRow, originCol, 0x00ffff);
+
+  // Get current turn directly from the signal
+  const isOpponentTurn = boulderThrower.color !== currentTurn();
+
+  // Determine the highlight color based on the turn
+  const highlightColor = isOpponentTurn ? 0xe5e4e2 : 0xffff00;
 
   const directions = [
     { deltaRow: 1, deltaCol: 0 },
@@ -57,7 +66,7 @@ export function highlightMoves(boulderThrower, addHighlight, allPieces) {
       const occupied = getPieceAt({ row: targetRow, col: targetCol }, allPieces);
       if (occupied) break;
 
-      addHighlight(targetRow, targetCol);
+      addHighlight(targetRow, targetCol, highlightColor);
     }
   }
 }
@@ -98,21 +107,30 @@ export async function handleBoulderThrowerClick(row, col, pixiApp) {
   const currentPieces = pieces();
   const currentSelection = selectedSquare();
   const selectedPiece = currentSelection ? getPieceAt(currentSelection, currentPieces) : null;
+  const targetPiece = getPieceAt({ row, col }, currentPieces);
 
   // === Step 1: Launch capture logic
-  if (selectedPiece && selectedPiece.type === 'BoulderThrower' && isInBoulderMode()) {
-    const targetPiece = getPieceAt({ row, col }, currentPieces);
-    const manhattanDistance = Math.abs(row - currentSelection.row) + Math.abs(col - currentSelection.col);
-
-    if (targetPiece && targetPiece.color !== selectedPiece.color && manhattanDistance === 3) {
+  if (
+    selectedPiece && 
+    selectedPiece.type === 'BoulderThrower' 
+    && isInBoulderMode()
+  ) {
+    if (targetPiece && targetPiece.color !== selectedPiece.color && targetPiece.isStone !== true) {
       const captured = getPieceAt({ row, col }, currentPieces);
-      const updatedPieces = handleCapture(captured, currentPieces, selectedPiece);
+      const updatedPieces = handleCapture(captured, currentPieces);
       setPieces(updatedPieces);
-      setSelectedSquare(null);
-      setHighlights([]);
       setIsInBoulderMode(false);
+      setSelectedSquare(null);
+	    setHighlights([]);
+      switchTurn();
+
       await drawBoard(pixiApp, handleSquareClick);
       return true;
+    }
+    else {
+      clearBoardState();
+      await drawBoard(pixiApp, handleSquareClick);
+      return false;
     }
   }
 
@@ -124,12 +142,17 @@ export async function handleBoulderThrowerClick(row, col, pixiApp) {
     selectedPiece.type === 'BoulderThrower' &&
     !isInBoulderMode()
   ) {
+    // Get current turn directly from the signal
+    const isOpponentTurn = selectedPiece.color !== currentTurn();
+
+    // Determine the highlight color based on the turn
+    const highlightColor = isOpponentTurn ? 0xe5e4e2 : 0xff0000;
+
     const launchTargets = [];
-    highlightCaptureZones(selectedPiece, (highlightRow, highlightCol, color) => {
-      launchTargets.push({ row: highlightRow, col: highlightCol, color });
+    highlightCaptureZones(selectedPiece, (highlightRow, highlightCol) => {
+      launchTargets.push({ row: highlightRow, col: highlightCol, color: highlightColor});
     }, currentPieces);
 
-    launchTargets.push({ row, col, color: 0x00ffff });
     setHighlights(launchTargets);
     setIsInBoulderMode(true);
     await drawBoard(pixiApp, handleSquareClick);

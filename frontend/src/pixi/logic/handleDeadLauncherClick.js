@@ -17,7 +17,6 @@ import { handleSquareClick } from '../clickHandler';
 import { clearBoardState } from './clearBoardState';
 import { handleCapture } from '~/pixi/logic/handleCapture';
 
-
 /**
  * Handles DeadLauncher-specific interactions:
  * - Step 1: Select DeadLauncher normally (handled outside)
@@ -26,7 +25,7 @@ import { handleCapture } from '~/pixi/logic/handleCapture';
  * - Step 4: Click DeadLauncher again to enter launch mode
  * - Step 5: Click red-highlighted target to launch
  */
-export async function handleDeadLauncherClick(rowIndex, columnIndex, pixiApp) {
+export async function handleDeadLauncherClick(rowIndex, columnIndex, pixiApp, isTurn) {
   const allPieces = pieces();
   const clickedPiece = getPieceAt({ row: rowIndex, col: columnIndex }, allPieces);
   const selectedPosition = selectedSquare();
@@ -42,7 +41,7 @@ export async function handleDeadLauncherClick(rowIndex, columnIndex, pixiApp) {
       const selectedLauncher = getPieceAt(selectedPosition, allPieces);
       selectedLauncher.pawnLoaded = false;
       const captured = getPieceAt({ row: rowIndex, col: columnIndex }, allPieces);
-      const updatedPieces = handleCapture(captured, allPieces, selectedLauncher);
+      const updatedPieces = handleCapture(captured, allPieces);
       setPieces(updatedPieces);
       setLaunchMode(null);
       setSelectedSquare(null);
@@ -111,8 +110,9 @@ export async function handleDeadLauncherClick(rowIndex, columnIndex, pixiApp) {
 
     if (
       isTargetAdjacent &&
-      ["Pawn", "NecroPawn"].includes(clickedTargetPiece?.type) &&
-      clickedTargetPiece.color === launcherPiece.color
+      ["Pawn", "NecroPawn", "YoungWiz", "PawnHopper", "HellPawn"].includes(clickedTargetPiece?.type) &&
+      clickedTargetPiece.color === launcherPiece.color &&
+      isTurn
     ) {
       const updatedLauncher = { ...launcherPiece, pawnLoaded: true };
       setIsInLoadingMode(false);

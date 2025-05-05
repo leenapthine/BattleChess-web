@@ -18,6 +18,7 @@
 import { highlightMoves as highlightStandardQueenMoves } from '~/pixi/pieces/basic/Queen';
 import { getSurroundingTiles } from '~/pixi/pieces/necro/NecroPawn';
 import { getPieceAt } from '~/pixi/utils';
+import { handleCapture } from '~/pixi/logic/handleCapture';
 
 /**
  * Highlights valid queen movement options.
@@ -27,7 +28,6 @@ import { getPieceAt } from '~/pixi/utils';
  * @param {Array} allPieces - All the pieces currently on the board.
  */
 export function highlightMoves(queenOfDestruction, addHighlight, allPieces) {
-  // Highlight standard queen movement
   highlightStandardQueenMoves(queenOfDestruction, addHighlight, allPieces);
 }
 
@@ -49,9 +49,20 @@ export function triggerDetonate(row, col, currentPieces) {
     // Get surrounding tiles
     const surroundingTiles = getSurroundingTiles(row, col);
 
-    // Remove all pieces within the surrounding area
-    let updatedPieces = currentPieces.filter(piece => {
-        return !surroundingTiles.some(tile => tile.row === piece.row && tile.col === piece.col);
+    // Find the pieces to be removed (those within the surrounding area)
+    const piecesToRemove = currentPieces.filter(piece => {
+      return surroundingTiles.some(tile => tile.row === piece.row && tile.col === piece.col);
+    });
+
+    // Apply handleCapture to each piece that is within the surrounding area
+    let updatedPieces = currentPieces;
+    for (const piece of piecesToRemove) {
+      updatedPieces = handleCapture(piece, updatedPieces);
+    }
+
+    // Remove the pieces within the surrounding area
+    updatedPieces = updatedPieces.filter(piece => {
+      return !surroundingTiles.some(tile => tile.row === piece.row && tile.col === piece.col);
     });
 
     // Return the updated list of pieces (with the removed pieces)

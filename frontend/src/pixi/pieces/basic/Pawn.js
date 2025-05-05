@@ -34,7 +34,7 @@ export function highlightMoves(piece, addHighlight, allPieces) {
   for (const dc of [-1, 1]) {
     const diag = { row: row + direction, col: col + dc };
     if (isOpponentPiece(diag, color, allPieces)) {
-      addHighlight(diag.row, diag.col, highlightColor);
+      addHighlight(diag.row, diag.col, isOpponentTurn ? 0xe5e4e2 : 0xff0000);
     }
   }
 }

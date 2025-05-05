@@ -48,6 +48,8 @@ export const [isInDominationMode, setIsInDominationMode] = createSignal(false);
 export const [isSecondMove, setIsSecondMove] = createSignal(false);
 // True if the Prowler has captured an enemy piece and is now moving again.
 
+// The state for the currently selected piece
+export const [selectedPiece, setSelectedPiece] = createSignal(null);
 
 // The state for current turn (white or black)
 export const [currentTurn, setCurrentTurn] = createSignal("White");
@@ -55,7 +57,7 @@ export const [currentTurn, setCurrentTurn] = createSignal("White");
 // Corrected standard chess layout
 export const [pieces, setPieces] = createSignal([
   // White Pieces (top of the board)
-  { id: 1, type: "Portal", color: "White", row: 0, col: 0, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null, isStone: false, 
+  { id: 1, type: "BoulderThrower", color: "White", row: 0, col: 0, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null, isStone: false, 
     gainedAbilities: { knight: false, rook: false, queen: false, pawn: false }, 
   },
   { id: 2, type: "Familiar", color: "White", row: 0, col: 1, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null, isStone: false,
@@ -64,7 +66,7 @@ export const [pieces, setPieces] = createSignal([
   { id: 3, type: "Howler", color: "White", row: 0, col: 2, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null, isStone: false,
     gainedAbilities: { knight: false, rook: false, queen: false, pawn: false },
   },
-  { id: 4, type: "QueenOfDomination", color: "White", row: 0, col: 3, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null, isStone: false,
+  { id: 4, type: "QueenOfDestruction", color: "White", row: 0, col: 3, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null, isStone: false,
     gainedAbilities: { knight: false, rook: false, queen: false, pawn: false },
    },
   { id: 5, type: "HellKing", color: "White", row: 0, col: 4, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null, isStone: false,
@@ -76,7 +78,7 @@ export const [pieces, setPieces] = createSignal([
   { id: 7, type: "Prowler", color: "White", row: 0, col: 6, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null, isStone: false,
     gainedAbilities: { knight: false, rook: false, queen: false, pawn: false },
   },
-  { id: 8, type: "BoulderThrower", color: "White", row: 0, col: 7, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null, isStone: false,
+  { id: 8, type: "Beholder", color: "White", row: 0, col: 7, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null, isStone: false,
     gainedAbilities: { knight: false, rook: false, queen: false, pawn: false },
   },
   { id: 9,  type: "HellPawn", color: "White", row: 1, col: 0, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null, isStone: false,
@@ -108,25 +110,25 @@ export const [pieces, setPieces] = createSignal([
   { id: 17, type: "Beholder", color: "Black", row: 7, col: 0, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null, isStone: false,
     gainedAbilities: { knight: false, rook: false, queen: false, pawn: false },
   },
-  { id: 18, type: "BeastKnight", color: "Black", row: 7, col: 1, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null, isStone: false,
+  { id: 18, type: "GhostKnight", color: "Black", row: 7, col: 1, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null, isStone: false,
     gainedAbilities: { knight: false, rook: false, queen: false, pawn: false },
   },
   { id: 19, type: "BeastDruid", color: "Black", row: 7, col: 2, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null, isStone: false,
     gainedAbilities: { knight: false, rook: false, queen: false, pawn: false },
   },
-  { id: 20, type: "QueenOfDestruction", color: "Black", row: 7, col: 3, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null, isStone: false,
+  { id: 20, type: "QueenOfBones", color: "Black", row: 7, col: 3, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null, isStone: false,
     gainedAbilities: { knight: false, rook: false, queen: false, pawn: false },
   },
   { id: 21, type: "WizardKing", color: "Black", row: 7, col: 4, pawnLoaded: false, stunned: false, raisesLeft: 1, pieceLoaded: null, isStone: false,
     gainedAbilities: { knight: false, rook: false, queen: false, pawn: false },
   },
-  { id: 22, type: "WizardTower", color: "Black", row: 7, col: 5, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null, isStone: false,
+  { id: 22, type: "Necromancer", color: "Black", row: 7, col: 5, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null, isStone: false,
     gainedAbilities: { knight: false, rook: false, queen: false, pawn: false },
   },
   { id: 23, type: "Prowler", color: "Black", row: 7, col: 6, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null, isStone: false,
     gainedAbilities: { knight: false, rook: false, queen: false, pawn: false },
   },
-  { id: 24, type: "BoulderThrower", color: "Black", row: 7, col: 7, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null, isStone: false,
+  { id: 24, type: "DeadLauncher", color: "Black", row: 7, col: 7, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null, isStone: false,
     gainedAbilities: { knight: false, rook: false, queen: false, pawn: false },
   },
   { id: 25, type: "Pawn", color: "Black", row: 6, col: 0, pawnLoaded: false, stunned: false, raisesLeft: 0, pieceLoaded: null, isStone: false,
