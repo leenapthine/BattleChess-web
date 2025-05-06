@@ -7,9 +7,12 @@ import {
   isInDominationMode,
   currentTurn,
   switchTurn,
+  setPieceViewerPiece,
+  setPieceDescription
 } from '~/state/gameState';
 
 import { getPieceAt } from './utils';
+import descriptions from '~/data/pieceDescriptions';
 
 import { highlightValidMovesForPiece } from '~/pixi/highlight';
 import { isSquareSelected } from '~/pixi/utils';
@@ -22,14 +25,14 @@ import { handleDeadLauncherClick } from "./logic/handleDeadLauncherClick";
 import { handleGhoulKingClick } from "./logic/handleGhoulKingClick";
 import { handleBoulderThrowerClick } from './pieces/beasts/BoulderThrower';
 import { handleQueenOfDominationClick } from '~/pixi/logic/handleQueenOfDominationClick';
-import { handleYoungWizZapClick } from '~/pixi/pieces/wizards/youngWiz';
+import { handleYoungWizZapClick } from '~/pixi/pieces/wizards/YoungWiz';
 import { handleQueenOfIllusionsSwap } from '~/pixi/pieces/wizards/QueenOfIllusions';
 import { handleWizardTowerCapture } from './pieces/wizards/WizardTower';
 import { handleWizardKingCapture } from './pieces/wizards/WizardKing';
 import { handleFamiliarClick } from './pieces/wizards/Familiar';
 import { handlePortalClick } from './pieces/wizards/Portal';
 import { handleHowlerCapture } from './pieces/demons/Howler';
-import { handleHellPawnCapture } from './pieces/demons/Hellpawn';
+import { handleHellPawnCapture } from './pieces/demons/HellPawn';
 import { handleProwlerCapture } from './pieces/demons/Prowler';
 import { handleBeholderClick } from './pieces/demons/Beholder';
 import { handleHellKingCapture } from './pieces/demons/HellKing';
@@ -85,7 +88,7 @@ export async function handleSquareClick(rowIndex, columnIndex, pixiApp) {
     }
 
     // 3. Handle special GhoulKing behavior
-    if (await handleGhoulKingClick(rowIndex, columnIndex, pixiApp)) {
+    if (await handleGhoulKingClick(rowIndex, columnIndex, pixiApp, isTurn)) {
       return;
     }
 
@@ -95,7 +98,7 @@ export async function handleSquareClick(rowIndex, columnIndex, pixiApp) {
     }
 
     // 5. Handle YoungWiz post-move logic
-    if (await handleYoungWizZapClick(rowIndex, columnIndex, pixiApp)) {
+    if (await handleYoungWizZapClick(rowIndex, columnIndex, pixiApp, isTurn)) {
       return;
     }
 
@@ -115,7 +118,7 @@ export async function handleSquareClick(rowIndex, columnIndex, pixiApp) {
     }
 
     // 9. Handle QueenOfIllusions click logic
-    if (await handleQueenOfIllusionsSwap(rowIndex, columnIndex, pixiApp)) {
+    if (await handleQueenOfIllusionsSwap(rowIndex, columnIndex, pixiApp, isTurn)) {
       return;
     }
 
@@ -193,7 +196,8 @@ export async function handleSquareClick(rowIndex, columnIndex, pixiApp) {
 
   // Handle resurrection tile placement
   if (
-    await handleResurrectionClick(rowIndex, columnIndex, pixiApp)) {
+    await handleResurrectionClick(rowIndex, columnIndex, pixiApp)
+  ) {
     return;
   }
 
@@ -205,6 +209,9 @@ export async function handleSquareClick(rowIndex, columnIndex, pixiApp) {
       console.log("Piece is stunned and cannot be selected.");
       return;
     } 
+
+    setPieceViewerPiece(clickedPiece);
+    setPieceDescription(descriptions[clickedPiece.type] || "No description available.");
 
     const highlightList = [];
     highlightValidMovesForPiece(

@@ -15,8 +15,7 @@
 // - When the piece is unloaded from any Portal, the loaded state is cleared for all friendly Portals.
 
 
-import { highlightMoves as highlightRookMoves } from '~/pixi/pieces/basic/Rook'; // Use Rook's highlight logic
-import { getPieceAt, getAdjacentTiles } from '~/pixi/utils';
+import { highlightMoves as highlightRookMoves } from '~/pixi/pieces/basic/Rook';
 import { 
   setPieces,
   pieces,
@@ -27,7 +26,9 @@ import {
   setLaunchMode,
   isInLoadingMode,
   setIsInLoadingMode,
+  switchTurn,
 } from '~/state/gameState';
+import { getPieceAt, getAdjacentTiles } from '~/pixi/utils';
 import { drawBoard } from '~/pixi/drawBoard';
 import { handleSquareClick } from '~/pixi/clickHandler';
 import { clearBoardState } from '~/pixi/logic/clearBoardState';
@@ -201,6 +202,7 @@ export async function handlePortalClick(rowIndex, columnIndex, pixiApp, isTurn) 
       setPieces([...remainingPieces, launcherPiece]);
       setSelectedSquare(null);
       setHighlights([]);
+      switchTurn();
       await drawBoard(pixiApp, handleSquareClick);
       return true;
     } else {

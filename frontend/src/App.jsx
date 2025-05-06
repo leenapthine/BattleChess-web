@@ -1,10 +1,20 @@
-import { Router, Route } from '@solidjs/router';
-import Index from '~/routes/index';
+import { MetaProvider } from "@solidjs/meta";
+import { Router } from "@solidjs/router";
+import { FileRoutes } from "@solidjs/start/router";
+import { Suspense } from "solid-js";
+import "./app.css";
 
 export default function App() {
   return (
-    <Router>
-      <Route path="/" component={Index} />
+    <Router
+      root={props => (
+        <MetaProvider>
+          <a href="/"></a>
+          <Suspense>{props.children}</Suspense>
+        </MetaProvider>
+      )}
+    >
+      <FileRoutes />
     </Router>
   );
 }

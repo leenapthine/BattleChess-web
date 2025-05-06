@@ -1,3 +1,20 @@
+// Description: Logic module for the HellKing, a level 2 King from the Demon guild.
+//
+// Main Functions:
+// - highlightMoves(hellKing, addHighlight, allPieces):
+//     Highlights all valid 1-tile movement options in any direction (standard King movement).
+// - handleHellKingCapture(row, col, pixiApp, isTurn):
+//     Handles capture logic where the HellKing "converts" an enemy piece into a friendly unit
+//     instead of moving into its square.
+//
+// Special Features:
+// - The HellKing moves and captures like a standard King — one square in any direction.
+// - When capturing, the HellKing does **not** move.
+// - Instead, the target enemy unit is turned into a friendly unit (color is flipped).
+// - The converted piece stays in its current position, now controlled by the HellKing's side.
+// - Cannot convert stone units or friendly units.
+// - Level 2 King from the Demon guild.
+
 import { highlightMoves as highlightStandardKingMoves } from '~/pixi/pieces/basic/King';
 import { getPieceAt } from '~/pixi/utils';
 import { drawBoard } from '../../drawBoard';

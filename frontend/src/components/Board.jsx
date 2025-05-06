@@ -12,12 +12,24 @@ export default function Board() {
   let containerElement;
 
   onMount(async () => {
-    const pixiApp = new Application();
-    await pixiApp.init({ width: 800, height: 800, backgroundColor: 0xffffff });
 
+    // Initialize PixiJS Application
+    const pixiApp = new Application();
+    await pixiApp.init({ 
+      resizeTo: containerElement,
+      backgroundColor: 0xffffff
+    });
+    // Append the canvas after initialization
     containerElement.appendChild(pixiApp.canvas);
     await drawBoard(pixiApp, handleSquareClick);
   });
+  
 
-  return <div ref={containerElement} />;
+  return (
+    <div 
+      ref={containerElement} 
+      class="relative w-[672px] max-w-full aspect-square bg-gray-200"
+    />
+  );
 }
+

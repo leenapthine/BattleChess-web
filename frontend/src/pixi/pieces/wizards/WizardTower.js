@@ -10,7 +10,7 @@
 // - Moves and captures like a Bishop (diagonal movement and capture).
 // - Captures by shooting from a distance without moving into the captured square.
 
-import { highlightMoves as highlightStandardBishopMoves } from '~/pixi/pieces/basic/Bishop'; // Import standard bishop highlighting logic
+import { highlightMoves as highlightStandardBishopMoves } from '~/pixi/pieces/basic/Bishop';
 import { getPieceAt } from '~/pixi/utils';
 import { drawBoard } from '../../drawBoard';
 import { handleSquareClick } from '../../clickHandler';
