@@ -13,11 +13,11 @@
 // - On the first click, highlights all valid moves and friendly Pawns/YoungWiz in cyan.
 // - On the second click on a friendly Pawn/YoungWiz, swaps their position with the Queen of Illusions.
 
-import { highlightMoves as highlightStandardQueenMoves } from '~/pixi/pieces/basic/Queen'; // Import standard queen highlighting logic
-import { getPieceAt } from '~/pixi/utils';
+import { highlightMoves as highlightStandardQueenMoves } from '~/pixi/pieces/basic/Queen';
 import { drawBoard } from '../../drawBoard';
+import { getPieceAt } from '~/pixi/utils';
 import { handleSquareClick } from '../../clickHandler';
-import { pieces, selectedSquare, setSelectedSquare, setPieces, setHighlights } from '~/state/gameState';
+import { pieces, selectedSquare, setSelectedSquare, setPieces, setHighlights, switchTurn } from '~/state/gameState';
 
 /**
  * Highlights valid queen movement options and friendly pieces eligible for swap.
@@ -68,7 +68,7 @@ export function highlightSwapTargets(queenOfIllusions, addHighlight, allPieces) 
  * @param {Object} pixiApp - The PixiJS application instance, used to render the board.
  * @returns {boolean} Returns true if the swap was performed, false otherwise.
  */
-export function handleQueenOfIllusionsSwap(row, col, pixiApp) {
+export function handleQueenOfIllusionsSwap(row, col, pixiApp, isTurn) {
   const currentPieces = pieces();
   const selectedPosition = selectedSquare();
   const queenPiece = selectedPosition ? getPieceAt(selectedPosition, currentPieces) : null;
@@ -77,7 +77,7 @@ export function handleQueenOfIllusionsSwap(row, col, pixiApp) {
   if (!queenPiece || queenPiece.type !== 'QueenOfIllusions') return false;
 
   // Ensure the clicked piece is a friendly Pawn or YoungWiz
-  if (clickedPiece && 
+  if (isTurn && clickedPiece && 
     (
       clickedPiece.type === 'Pawn' ||
       clickedPiece.type === 'NecroPawn' ||
@@ -103,6 +103,7 @@ export function handleQueenOfIllusionsSwap(row, col, pixiApp) {
     setSelectedSquare(null);
     setHighlights([]);
     drawBoard(pixiApp, handleSquareClick);
+    switchTurn();
     return true;
   }
 

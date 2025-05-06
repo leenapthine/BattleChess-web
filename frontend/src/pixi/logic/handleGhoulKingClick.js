@@ -20,7 +20,7 @@ import { handleSquareClick } from '~/pixi/clickHandler';
  * @param {PIXI.Application} pixiApp - The PixiJS application instance.
  * @returns {Promise<boolean>} True if the click was handled by GhoulKing logic.
  */
-export async function handleGhoulKingClick(row, col, pixiApp) {
+export async function handleGhoulKingClick(row, col, pixiApp, isTurn) {
   const currentPieces = pieces();
   const selectedCoord = selectedSquare();
   const selectedPiece = selectedCoord ? getPieceAt(selectedCoord, currentPieces) : null;
@@ -28,6 +28,7 @@ export async function handleGhoulKingClick(row, col, pixiApp) {
 
   // === Step 3: Raise NecroPawn on a valid adjacent tile
   if (
+    isTurn &&
     selectedPiece?.type === 'GhoulKing' &&
     selectedPiece.raisesLeft > 0 &&
     isRaiseTile &&

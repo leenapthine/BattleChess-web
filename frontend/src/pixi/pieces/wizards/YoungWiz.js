@@ -12,7 +12,7 @@ import { highlightMoves as highlightStandardPawnMoves } from '~/pixi/pieces/basi
 import { getPieceAt } from '~/pixi/utils';
 import { drawBoard } from '../../drawBoard';
 import { handleSquareClick } from '../../clickHandler';
-import { pieces, selectedSquare, setSelectedSquare, setPieces, setHighlights, currentTurn } from '~/state/gameState';
+import { pieces, selectedSquare, setSelectedSquare, setPieces, setHighlights, currentTurn, switchTurn } from '~/state/gameState';
 import { handleCapture } from '../../logic/handleCapture';
 
 /**
@@ -46,7 +46,7 @@ export function highlightMoves(youngWiz, addHighlight, allPieces) {
  * @param {Object} pixiApp - The PixiJS app instance.
  * @returns {boolean} - Returns true if a zap capture is performed.
  */
-export function handleYoungWizZapClick(row, col, pixiApp) {
+export function handleYoungWizZapClick(row, col, pixiApp, isTurn) {
   const currentPieces = pieces();
   const selectedPosition = selectedSquare();
   const wizPiece = selectedPosition ? getPieceAt(selectedPosition, currentPieces) : null;
@@ -58,11 +58,18 @@ export function handleYoungWizZapClick(row, col, pixiApp) {
   const zapCapturePosition = { row: wizPiece.row + direction, col: wizPiece.col };
   const pieceAtZap = getPieceAt(zapCapturePosition, currentPieces);
 
-  if (targetPiece && pieceAtZap && targetPiece === pieceAtZap && targetPiece.color !== wizPiece.color) {
+  // Check if the clicked square is the zap capture position
+  if (isTurn &&
+    targetPiece &&
+    pieceAtZap &&
+    targetPiece === pieceAtZap &&
+    targetPiece.color !== wizPiece.color
+  ) {
     const updatedBoard = handleCapture(targetPiece, currentPieces);
     setPieces(updatedBoard);
     setSelectedSquare(null);
     setHighlights([]);
+    switchTurn();
     drawBoard(pixiApp, handleSquareClick);
     return true;
   }
