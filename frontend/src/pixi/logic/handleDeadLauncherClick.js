@@ -8,6 +8,7 @@ import {
   setLaunchMode,
   isInLoadingMode,
   setIsInLoadingMode,
+  switchTurn,
 } from '~/state/gameState';
 
 import { getPieceAt } from '../utils';
@@ -46,6 +47,7 @@ export async function handleDeadLauncherClick(rowIndex, columnIndex, pixiApp, is
       setLaunchMode(null);
       setSelectedSquare(null);
       setHighlights([]);
+      switchTurn();
       await drawBoard(pixiApp, handleSquareClick);
       return true;
     }
@@ -68,6 +70,14 @@ export async function handleDeadLauncherClick(rowIndex, columnIndex, pixiApp, is
       setSelectedSquare({ row: rowIndex, col: columnIndex });
 
       const highlightList = [];
+
+      // Add self highlight
+      highlightList.push({
+        row: rowIndex,
+        col: columnIndex,
+        color: "yellow"
+      });
+
       highlightMoves(
         updatedLauncher,
         (highlightRow, highlightCol, color) => highlightList.push({ row: highlightRow, col: highlightCol, color }),
@@ -93,10 +103,18 @@ export async function handleDeadLauncherClick(rowIndex, columnIndex, pixiApp, is
       await drawBoard(pixiApp, handleSquareClick);
       return true;
     }
+    // Toggle off if already in loading/launch mode
+    setIsInLoadingMode(false);
+    setLaunchMode(null);
+
+    await clearBoardState();
+    await drawBoard(pixiApp, handleSquareClick);
+    return true;
   }
 
   // Step 3: Load Pawn or NecroPawn
   if (
+    isTurn &&
     selectedPosition &&
     !launchMode() &&
     getPieceAt(selectedPosition, allPieces)?.type === "DeadLauncher"
@@ -122,6 +140,7 @@ export async function handleDeadLauncherClick(rowIndex, columnIndex, pixiApp, is
       setPieces([...remainingPieces, updatedLauncher]);
       setSelectedSquare(null);
       setHighlights([]);
+      switchTurn();
       await drawBoard(pixiApp, handleSquareClick);
       return true;
     } else {
