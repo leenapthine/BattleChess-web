@@ -9,7 +9,8 @@ import {
 	setIsInDominationMode,
 	setIsInBoulderMode,
 	setIsInLoadingMode,
-	setPieceViewerPiece,
+	currentTurn,
+	pieces,
 } from '~/state/gameState';
 
 /**

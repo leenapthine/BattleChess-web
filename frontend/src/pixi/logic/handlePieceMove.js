@@ -5,6 +5,7 @@ import {
   setSelectedSquare,
   setHighlights,
   setSacrificeMode,
+  currentTurn,
 } from '~/state/gameState';
 
 import { getPieceAt } from '~/pixi/utils';
@@ -93,7 +94,24 @@ export async function handlePieceMove(destination, pixiApp) {
   applyStunEffect(movedPieceFinal, updatedPieces);
   triggerResurrectionPrompt(selectedPiece, targetPiece, destination, updatedPieces);
 
-  // Step 8: Redraw the board
+  console.log('Piece moved:', movedPieceFinal);
+
+  // Step 8: Check if the piece is stunned and remove stun effect
+  if (currentTurn() === 'White') {
+    for (const piece in pieces()) {
+      if (piece.color === 'White') {
+        piece.stunned = false;
+      }
+    }
+  } else {
+    for (const piece of pieces()) {
+      if (piece.color === 'Black') {
+        piece.stunned = false;
+      }
+    }
+  }
+
+  // Step 9: Redraw the board
   await drawBoard(pixiApp, handleSquareClick);
   return true;
 }

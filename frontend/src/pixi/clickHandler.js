@@ -177,6 +177,8 @@ export async function handleSquareClick(rowIndex, columnIndex, pixiApp) {
 
     // Switch turn after the move if successful
     if (moveSuccessful) {
+      console.log("Move successful!");
+
       switchTurn();
       return;
     }

@@ -33,7 +33,7 @@ import {
   setIsSecondMove,
   switchTurn,
   setSelectedPiece,
-  selectedPiece
+  selectedPiece, 
 } from '~/state/gameState';
 import { handleCapture } from '../../logic/handleCapture';
 
@@ -74,6 +74,7 @@ export async function handleProwlerCapture(row, col, pixiApp, isTurn) {
     switchTurn();
     handleCapture(selectedPiece(), currentPieces);
     setSelectedPiece(null);
+    switchTurn();
     return false;
   }
 
