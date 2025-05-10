@@ -2,29 +2,32 @@ import Board from '~/components/Board';
 import PieceViewer from '~/components/PieceViewer';
 import PieceDescription from '~/components/PieceDescription';
 
+/* routes/index.jsx */
 export default function Index() {
   return (
-    <div class="bg-gray-200 min-h-screen flex justify-center items-center p-6">
-      {/* row */}
-      <div class="flex gap-8 items-center">
-        {/* board */}
-        <div class="bg-white rounded-xl shadow-lg p-4">
+    <div class="bg-gray-200 min-h-screen flex justify-center items-center p-4">
+      {/* max‑w‑screen‑lg caps the whole stack at ~1024 px */}
+      <div class="flex flex-col lg:flex-row gap-6 items-start w-full max-w-screen-lg">
+        {/* BOARD */}
+        <div class="bg-white rounded-xl shadow-lg p-4 w-full max-w-[368px] sm:max-w-[704px]">
           <Board />
         </div>
 
-        {/* right‑hand column */}
-        <div class="flex flex-col justify-between gap-6">
-          {/* piece viewer (top‑aligned) */}
-          <div class="bg-white rounded-xl shadow-lg p-4">
-            <PieceViewer />
-          </div>
-
-          {/* description (bottom‑aligned) */}
-          <div class="bg-white rounded-xl shadow-lg p-4">
-            <PieceDescription />
-          </div>
+        {/* CARDS */}
+        <div class="flex flex-col gap-4 w-full max-w-[368px] sm:max-w-[400px]">
+          <ResponsiveCard><PieceViewer /></ResponsiveCard>
+          <ResponsiveCard><PieceDescription /></ResponsiveCard>
         </div>
       </div>
+    </div>
+  );
+}
+
+/* A tiny wrapper component so we don’t repeat class strings */
+function ResponsiveCard(props) {
+  return (
+    <div class="bg-white rounded-xl shadow-lg p-4 w-full text-sm sm:text-base">
+      {props.children}
     </div>
   );
 }

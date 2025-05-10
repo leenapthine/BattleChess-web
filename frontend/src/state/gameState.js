@@ -1,4 +1,4 @@
-import { createSignal } from 'solid-js';
+import { createSignal, onMount } from 'solid-js';
 import descriptions from "~/data/pieceDescriptions.js";
 
 export const [selectedSquare, setSelectedSquare] = createSignal(null);
@@ -171,3 +171,10 @@ export const [pieces, setPieces] = createSignal([
 export function switchTurn() {
   setCurrentTurn(currentTurn() === "White" ? "Black" : "White");
 }
+
+export const [tileSize, setTileSize] = createSignal(84);
+
+onMount(() => {
+  const size = window.innerWidth < 640 ? 37 : 84;
+  setTileSize(size);
+});

@@ -10,9 +10,9 @@ export default function PieceViewer() {
   return (
     <Show when={piece()} keyed>
       {(p) => (
-        <div class="card w-96 bg-white shadow-lg">
+        <div class="card bg-white shadow-lg">
           <div class="card-body" style={{ "background-color": "#005500" }}>
-            <h2 class="card-title justify-center text-6xl text-black">
+            <h2 class="card-title justify-center font-bold text-3xl text-black">
               {p.type.replace(/(?!^)([A-Z])/g, " $1")}
             </h2>
             <div class="flex justify-center">

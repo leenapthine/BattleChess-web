@@ -6,12 +6,12 @@ export default function PieceDescription() {
 
   return (
     <Show when={desc()}>
-      <div class="card w-96 bg-white shadow-lg">
+      <div class="card bg-white shadow-lg">
         <div
           class="card-body space-y-2"
           style={{ "background-color": "#55FF55" }}
         >
-          <h2 class="card-title justify-center text-2xl font-bold text-black">
+          <h2 class="card-title justify-center sm:text-2xl text-xl font-bold text-black">
             Abilities
           </h2>
           <div class="text-sm text-gray-900 font-mono leading-relaxed">

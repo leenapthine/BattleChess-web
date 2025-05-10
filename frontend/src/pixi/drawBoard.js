@@ -2,8 +2,7 @@ import createSquare from '~/components/Square';
 import { pieces, highlights } from '~/state/gameState';
 import { Assets, Sprite } from 'pixi.js';
 import { isSquareSelected } from '~/pixi/utils';
-import { TILE_SIZE } from '~/pixi/constants';
-import { resurrectionTargets, isInLoadingMode } from '~/state/gameState';
+import { resurrectionTargets, isInLoadingMode, tileSize } from '~/state/gameState';
 
 const loadedTextures = {};
 
@@ -47,9 +46,9 @@ export async function drawBoard(pixiApplication, onSquareClick) {
         : highlightData?.color ?? 0xffff00; // normal highlight or default yellow
 
       const squareGraphic = createSquare({
-        x: columnIndex * TILE_SIZE,
-        y: rowIndex * TILE_SIZE,
-        size: TILE_SIZE,
+        x: columnIndex * tileSize(),
+        y: rowIndex * tileSize(),
+        size: tileSize(),
         color: squareColor,
         highlighted: squareIsHighlighted,
         highlightColor: borderColor,
@@ -72,10 +71,10 @@ export async function drawBoard(pixiApplication, onSquareClick) {
     }
 
     const pieceSprite = new Sprite(loadedTextures[texturePath]);
-    const scaleFactor = TILE_SIZE / pieceSprite.texture.width;
+    const scaleFactor = tileSize() / pieceSprite.texture.width;
     pieceSprite.scale.set(scaleFactor);
-    pieceSprite.x = Math.round(piece.col * TILE_SIZE);
-    pieceSprite.y = Math.round(piece.row * TILE_SIZE);
+    pieceSprite.x = Math.round(piece.col * tileSize());
+    pieceSprite.y = Math.round(piece.row * tileSize());
     pieceSprite.zIndex = 2;
 
     pixiApplication.stage.addChild(pieceSprite);
