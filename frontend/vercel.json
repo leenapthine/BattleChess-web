@@ -1,0 +1,14 @@
+{
+    "version": 3,
+    "builds": [
+      {
+        "src": "package.json",
+        "use": "@vercel/node"
+      }
+    ],
+    "routes": [
+      { "src": "/sprites/(.*)", "dest": "/sprites/$1" },
+      { "src": "/(.*)", "dest": "/.output/server/index.mjs" }
+    ]
+  }
+  
