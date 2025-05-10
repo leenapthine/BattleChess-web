@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "vinxi dev",
-    "build": "vinxi build && cp -r public/sprites .vercel/output/static/sprites",
+    "build": "vinxi build",
     "start": "vinxi start",
     "version": "vinxi version"
   },
