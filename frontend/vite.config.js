@@ -1,13 +1,23 @@
-import { defineConfig } from 'vite';
-import solid from 'vite-plugin-solid';
-import tailwindcss from '@tailwindcss/vite';
-import path from 'path';
+import { defineConfig } from "vite";
+import solid from "solid-start/vite";
+import vercel from "solid-start-vercel";
+import tailwindcss from "@tailwindcss/vite";
+import path from "path";
 
 export default defineConfig({
-  plugins: [solid(), tailwindcss()],
+  plugins: [
+    tailwindcss(),
+    solid({
+      adapter: vercel(),
+      entry: {
+        server: "src/entry-server.jsx",
+        client: "src/entry-client.jsx",
+      }
+    })
+  ],
   resolve: {
     alias: {
-      '~': path.resolve(__dirname, './src'),
-    },
-  },
+      "~": path.resolve(__dirname, "./src")
+    }
+  }
 });
