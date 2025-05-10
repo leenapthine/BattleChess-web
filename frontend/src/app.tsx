@@ -1,4 +1,4 @@
-import { MetaProvider } from "@solidjs/meta";
+import { MetaProvider, Title, Link } from "@solidjs/meta";
 import { Router } from "@solidjs/router";
 import { FileRoutes } from "@solidjs/start/router";
 import { Suspense } from "solid-js";
@@ -9,6 +9,7 @@ export default function App() {
     <Router
       root={props => (
         <MetaProvider>
+          <Link rel="preload" as="image" href="/sprites/blackQueen.png" />
           <a href="/"></a>
           <Suspense>{props.children}</Suspense>
         </MetaProvider>
