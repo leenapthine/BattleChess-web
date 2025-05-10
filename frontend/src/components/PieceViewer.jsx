@@ -1,17 +1,12 @@
-import { Show, createMemo, onMount } from "solid-js";
+import { Show, createMemo } from "solid-js";
 import { pieceViewerPiece } from "~/state/gameState";
 
 export default function PieceViewer() {
-  const piece = pieceViewerPiece;
+  const piece = pieceViewerPiece; 
   const texturePath = createMemo(
-    () => `/sprites/${piece().color}${piece().type}.png`
+    () => piece() && `/sprites/${piece().color}${piece().type}.png`
   );
-
-  onMount(() => {
-    const img = new Image();
-    img.src = texturePath();
-  });
-
+  
   return (
     <Show when={piece()} keyed>
       {(p) => (
