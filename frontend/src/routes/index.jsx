@@ -9,8 +9,8 @@ export default function Index() {
       {/* max‑w‑screen‑lg caps the whole stack at ~1024 px */}
       <div class="flex flex-col lg:flex-row gap-6 items-start w-full max-w-screen-lg">
         {/* BOARD */}
-        <div class="bg-white rounded-xl shadow-lg p-4 w-full max-w-[368px] sm:max-w-[704px]">
-          <Board />
+        <div class="bg-white rounded-xl shadow-lg w-full max-w-[368px] sm:max-w-[704px]">
+        <ResponsiveCard><Board /></ResponsiveCard>
         </div>
 
         {/* CARDS */}
@@ -26,7 +26,7 @@ export default function Index() {
 /* A tiny wrapper component so we don’t repeat class strings */
 function ResponsiveCard(props) {
   return (
-    <div class="bg-white rounded-xl shadow-lg p-4 w-full text-sm sm:text-base">
+    <div class="bg-white rounded-xl shadow-lg w-full text-sm sm:text-base">
       {props.children}
     </div>
   );

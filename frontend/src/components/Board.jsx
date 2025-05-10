@@ -28,7 +28,7 @@ export default function Board() {
   return (
     <div 
       ref={containerElement} 
-      class="relative w-[296px] sm:w-[672px] max-w-full aspect-square bg-gray-200"
+      class="relative w-[360px] sm:w-[672px] max-w-full aspect-square bg-gray-200"
     />
   );
 }
