@@ -9,7 +9,7 @@ export default function App() {
     <Router
       root={props => (
         <MetaProvider>
-          <Link rel="preload" as="image" href="/sprites/blackQueen.png" />
+          <Link rel="preload" as="image" href="/sprites/BlackQueen.png" />
           <a href="/"></a>
           <Suspense>{props.children}</Suspense>
         </MetaProvider>
