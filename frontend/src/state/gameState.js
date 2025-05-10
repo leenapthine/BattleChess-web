@@ -175,6 +175,6 @@ export function switchTurn() {
 export const [tileSize, setTileSize] = createSignal(84);
 
 onMount(() => {
-  const size = window.innerWidth < 640 ? 45 : 84;
+  const size = window.innerWidth < 640 ? 41 : 84;
   setTileSize(size);
 });
