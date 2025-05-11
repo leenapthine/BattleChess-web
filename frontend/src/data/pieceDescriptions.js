@@ -1,4 +1,9 @@
 export default {
+  Instruction: `
+    - Click on a piece to select it.
+    - Click on a square to move the piece there.
+    - Click on an enemy piece to see its movement range.
+  `,
   Pawn: `
     - Moves forward 1 tile; captures diagonally.
     - Can move 2 tiles forward on its first move.

@@ -53,13 +53,10 @@ export const [isSecondMove, setIsSecondMove] = createSignal(false);
 export const [selectedPiece, setSelectedPiece] = createSignal(null);
 
 // The state for the currently selected piece in the piece viewer
-export const [pieceViewerPiece, setPieceViewerPiece] = createSignal({
-  type: "Queen",
-  color: "black",
-});
+export const [pieceViewerPiece, setPieceViewerPiece] = createSignal(null);
 
 // The state for the currently selected piece's description
-export const [pieceDescription, setPieceDescription] = createSignal(descriptions["Queen"]);
+export const [pieceDescription, setPieceDescription] = createSignal(descriptions["Instruction"]);
 
 // The state for current turn (white or black)
 export const [currentTurn, setCurrentTurn] = createSignal("White");
