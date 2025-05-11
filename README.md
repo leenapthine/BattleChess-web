@@ -15,7 +15,7 @@ Try the early demo for both browser and mobile screens here: https://battle-ches
 - SolidJS-style reactive state stores manage selected pieces, valid move highlights, and special states like resurrection or sacrifice.
 - Custom sprites are organized by name and color in `public/sprites/`.
 
-This is a refactor of my [previous version in C++](https://github.com/leenapthine/BattleChess). While the version is stylistically more developped, it currently lacks the multiplayer features of its predecessor. In the future, my **Django backend** will handle multiplayer sessions, user accounts, and army customization.
+This is a refactor of my [previous version in C++](https://github.com/leenapthine/BattleChess). While this version is stylistically more developped, it currently lacks the multiplayer features of its predecessor. In the future, my **Django backend** will handle multiplayer sessions, user accounts, and army customization.
 
 ---
 
