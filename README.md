@@ -1,10 +1,10 @@
 # Battle Chess
 
-**Battle Chess** is a custom-built, fantasy-themed chess game with special unit types, unique abilities, and a modular, extensible design.
-
-The game uses **PixiJS** to render an interactive chessboard in the browser. Units like the `Necromancer` can raise the dead, while pieces like `NecroPawn` can sacrifice themselves to destroy surrounding enemies. These mechanics are defined in isolated, composable logic modules.
+**Battle Chess** is a custom-built, fantasy-themed chess game with four uniques guilds all with special unit types, abilities, and a modular design.
 
 This project is full-stack — with a frontend written in modern JavaScript and a backend built in Django (in progress).
+
+Try the early demo for both browser and mobile screens here: https://battle-chess-web.vercel.app
 
 ---
 
@@ -15,9 +15,7 @@ This project is full-stack — with a frontend written in modern JavaScript and 
 - SolidJS-style reactive state stores manage selected pieces, valid move highlights, and special states like resurrection or sacrifice.
 - Custom sprites are organized by name and color in `public/sprites/`.
 
-In the future:
-
-- The **Django backend** will handle multiplayer sessions, user accounts, and persistent game state.
+This is a refactor of my [previous version in C++](https://github.com/leenapthine/BattleChess). While the version is stylistically more developped, it currently lacks the multiplayer features of its predecessor. In the future, my **Django backend** will handle multiplayer sessions, user accounts, and army customization.
 
 ---
 
@@ -26,15 +24,14 @@ In the future:
 ### Frontend
 
 - **PixiJS** – 2D rendering and board interaction
-- **SolidJS (Signals)** – Reactive state store
-- **Vite** – Fast bundler + dev server
+- **Solid-start (Signals)** – Reactive state store
 - **TailwindCSS** – UI styling
 - **JavaScript** – All logic in modern ES syntax
 
 ### Backend (Planned)
 
-- **Python 3.12**
-- **Django 5.2**
+- **Python**
+- **Django**
 - **PostgreSQL**
 - **Django REST Framework (DRF)** for game state syncing (planned)
 - **WebSocket support** (for future multiplayer)
@@ -62,13 +59,9 @@ npm install
 npm run dev
 ```
 
-Open the game at [http://localhost:5173](http://localhost:5173)
-
 ---
 
-## Backend (optional)
-
-> _Only needed if you plan to work on or run the backend_
+## Backend (not fully confgured yet)
 
 ### 1. Create Python Environment
 
@@ -90,9 +83,16 @@ python manage.py migrate
 python manage.py runserver
 ```
 
+## Media
+
+<p align="center">
+  <img width="50%" src="https://github.com/user-attachments/assets/00760b57-100e-4f4f-8d1e-10a5460147f1" />
+  <img width="50%" src="https://github.com/user-attachments/assets/a5a790c5-782b-4761-a9b2-1e014351dba0" />
+</p>
+
 ---
 
-## 📁 File Overview
+## File Overview
 
 - `src/pixi/` – Core game logic: click handling, movement, ability triggers
 - `src/pixi/pieces/` – Individual piece behavior (`Necromancer`, `Queen`, etc.)
@@ -111,6 +111,6 @@ If you're a new dev or a new ChatGPT thread, focus on:
 - `src/pixi/logic/` – contains modular logic units like `handlePieceMove.js`, `handleSacrificeClick.js`
 - `src/state/gameState.js` – reactive state signals (like `pieces()`)
 
-This project was designed for **modularity and testability**. Each new unit or behavior should be implemented in its own file and hooked into the main handler chain.
+This project was designed for **modularity**. Each new unit or behavior should be implemented in its own file and hooked into the main handler chain.
 
 ---
