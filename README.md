@@ -19,6 +19,15 @@ This is a refactor of my [previous version in C++](https://github.com/leenapthin
 
 ---
 
+## Media
+
+<p align="center">
+  <img width="50%" src="https://github.com/user-attachments/assets/00760b57-100e-4f4f-8d1e-10a5460147f1" />
+  <img width="50%" src="https://github.com/user-attachments/assets/a5a790c5-782b-4761-a9b2-1e014351dba0" />
+</p>
+
+---
+
 ## Tech Stack
 
 ### Frontend
@@ -82,13 +91,6 @@ pip install -r requirements.txt
 python manage.py migrate
 python manage.py runserver
 ```
-
-## Media
-
-<p align="center">
-  <img width="50%" src="https://github.com/user-attachments/assets/00760b57-100e-4f4f-8d1e-10a5460147f1" />
-  <img width="50%" src="https://github.com/user-attachments/assets/a5a790c5-782b-4761-a9b2-1e014351dba0" />
-</p>
 
 ---
 
